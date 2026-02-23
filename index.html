@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeoMox IT SOLUTIONS | Innovative Digital & SMS Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        
+        /* ── Loading Overlay ── */
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, #0f4444 0%, #071e1e 60%, #030d0d 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            opacity: 1;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: all;
+            overflow: hidden;
+        }
+        #loading-overlay.hide {
+            opacity: 0;
+            transform: scale(1.04);
+            pointer-events: none;
+        }
+
+        /* Animated mesh background */
+        #loading-overlay::before {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            background:
+                repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(79,209,197,0.03) 60px, rgba(79,209,197,0.03) 61px),
+                repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(79,209,197,0.03) 60px, rgba(79,209,197,0.03) 61px);
+            animation: gridMove 8s linear infinite;
+        }
+        @keyframes gridMove {
+            from { transform: translate(0,0); }
+            to   { transform: translate(61px, 61px); }
+        }
+
+        /* Outer spinning ring */
+        .loader-ring-outer {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 1px solid rgba(79,209,197,0.15);
+            border-top: 2px solid rgba(79,209,197,0.8);
+            border-right: 2px solid rgba(79,209,197,0.4);
+            animation: spinCW 2.4s linear infinite;
+            box-shadow: 0 0 30px rgba(79,209,197,0.1), inset 0 0 30px rgba(79,209,197,0.05);
+        }
+        /* Middle spinning ring */
+        .loader-ring-mid {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 1px solid rgba(79,209,197,0.1);
+            border-bottom: 2px solid rgba(79,209,197,0.7);
+            border-left: 2px solid rgba(79,209,197,0.3);
+            animation: spinCCW 1.8s linear infinite;
+        }
+        /* Inner spinning ring */
+        .loader-ring-inner {
+            position: absolute;
+            width: 148px;
+            height: 148px;
+            border-radius: 50%;
+            border: 1px solid rgba(79,209,197,0.08);
+            border-top: 1.5px solid rgba(56,178,172,0.9);
+            animation: spinCW 1.2s linear infinite;
+        }
+        @keyframes spinCW  { from { transform: rotate(0deg);   } to { transform: rotate(360deg);  } }
+        @keyframes spinCCW { from { transform: rotate(0deg);   } to { transform: rotate(-360deg); } }
+
+        /* Logo wrapper */
+        .loader-logo-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 220px;
+            height: 220px;
+            margin-bottom: 2rem;
+        }
+        .loader-logo-wrap img {
+            width: 96px;
+            height: 96px;
+            border-radius: 20px;
+            object-fit: cover;
+            position: relative;
+            z-index: 2;
+            animation: logoEntrance 0.6s cubic-bezier(0.175,0.885,0.32,1.275) both, logoGlow 2s ease-in-out 0.6s infinite alternate;
+        }
+        @keyframes logoEntrance {
+            from { opacity: 0; transform: scale(0.4) rotate(-15deg); }
+            to   { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        @keyframes logoGlow {
+            from { box-shadow: 0 0 20px rgba(79,209,197,0.4), 0 0 0 0 rgba(79,209,197,0); }
+            to   { box-shadow: 0 0 40px rgba(79,209,197,0.9), 0 0 80px rgba(79,209,197,0.3); }
+        }
+
+        /* Orbiting dot */
+        .loader-orbit {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            animation: spinCW 3s linear infinite;
+        }
+        .loader-orbit::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #4fd1c5;
+            border-radius: 50%;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 12px #4fd1c5, 0 0 24px rgba(79,209,197,0.6);
+        }
+        .loader-orbit-2 {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            animation: spinCCW 2s linear infinite;
+        }
+        .loader-orbit-2::before {
+            content: '';
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            background: rgba(79,209,197,0.7);
+            border-radius: 50%;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 8px #4fd1c5;
+        }
+
+        /* Brand text */
+        .loader-brand {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            animation: fadeUp 0.6s ease 0.3s both;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .loader-brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            line-height: 1;
+        }
+        .loader-brand-name .leo { color: #4fd1c5; }
+        .loader-brand-name .mox { color: #ffffff; }
+        .loader-brand-sub {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: rgba(79,209,197,0.7);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* Progress bar */
+        .loader-bar-wrap {
+            position: relative;
+            z-index: 2;
+            width: 200px;
+            height: 3px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 99px;
+            overflow: hidden;
+            animation: fadeUp 0.6s ease 0.5s both;
+        }
+        .loader-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4fd1c5, #38b2ac, #4fd1c5);
+            background-size: 200% 100%;
+            border-radius: 99px;
+            animation: barFill 1s ease 0.2s forwards, barShimmer 1s linear 0.2s infinite;
+            box-shadow: 0 0 10px rgba(79,209,197,0.8);
+        }
+        @keyframes barFill {
+            from { width: 0%; }
+            to   { width: 100%; }
+        }
+        @keyframes barShimmer {
+            from { background-position: 200% 0; }
+            to   { background-position: -200% 0; }
+        }
+
+        /* Floating particles in loader */
+        .loader-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(79,209,197,0.6);
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(79,209,197,0.8);
+            animation: lParticle var(--dur, 3s) ease-in-out var(--delay, 0s) infinite;
+        }
+        @keyframes lParticle {
+            0%   { transform: translate(0,0) scale(1); opacity: 0; }
+            20%  { opacity: 1; }
+            80%  { opacity: 1; }
+            100% { transform: translate(var(--tx,40px), var(--ty,-80px)) scale(0); opacity: 0; }
+        }
+
+        :root {
+            --primary: #4fd1c5;
+            --primary-dark: #38b2ac;
+            --secondary: #0066ff;
+            --dark: #1a4d4d;
+            --darker: #0d3434;
+            --hero-bg: #1a3d3d;
+            --light: #ffffff;
+            --gray: #718096;
+            --text-dark: #2d3748;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Page Logo Header */
+to { opacity: 1; transform: translateY(0); }
+        }
+.service-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(79,209,197,0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(79,209,197,0.6);
+            box-shadow: 0 12px 40px rgba(79,209,197,0.15);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #4fd1c5;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-card p {
+            color: #bdc3c7;
+            font-size: 0.95rem;
+        }
+
+        /* SPA page sections hidden by default */
+        .spa-section:not(.active) {
+            display: none !important;
+        }
+
+        .spa-section.active {
+            display: block;
+        }
+
+        section.hero.spa-section.active {
+            display: flex;
+        }
+
+        /* Animated particles background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            background: linear-gradient(135deg, #0f3d3e 0%, #1a4d4d 50%, #225555 100%);
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(79, 209, 197, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(79, 209, 197, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(79, 209, 197, 0.08) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(79, 209, 197, 0.4);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(79, 209, 197, 0.6);
+            animation: particleFloat 15s infinite ease-in-out;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(100px, -100vh) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 2s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 4s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 1s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 3s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 2.5s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 4.5s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 1.5s; }
+        .particle:nth-child(10) { left: 95%; animation-delay: 3.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-5deg); }
+        }
+
+        /* Floating shapes */
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(79, 209, 197, 0.1) 0%, transparent 70%);
+            animation: floatShape 20s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 5s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            bottom: 20%;
+            left: 40%;
+            animation-delay: 10s;
+        }
+
+        @keyframes floatShape {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, -50px) scale(1.1); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(79, 209, 197, 0.1);
+            z-index: 1000;
+            animation: slideDown 0.6s ease-out;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo svg {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(0 2px 8px rgba(79, 209, 197, 0.3));
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #2d3748;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links .btn {
+            padding: 0.6rem 1.5rem;
+            margin: 0;
+        }
+
+        .nav-links .btn::after {
+            display: none;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .dropdown-toggle .arrow {
+            font-size: 0.7rem;
+            transition: transform 0.3s;
+        }
+
+        .dropdown:hover .arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            min-width: 220px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            list-style: none;
+            padding: 0.75rem 0;
+            margin-top: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            border: 1px solid rgba(79, 209, 197, 0.2);
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            margin-top: 0.5rem;
+        }
+
+        .dropdown-menu li {
+            margin: 0;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #2d3748;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dropdown-menu a::after {
+            display: none;
+        }
+
+        .dropdown-menu a:hover {
+            background: linear-gradient(90deg, rgba(79, 209, 197, 0.15), rgba(79, 209, 197, 0.05));
+            color: var(--primary);
+            padding-left: 2rem;
+            transform: translateX(5px);
+        }
+
+        .dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 5% 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: #ffffff;
+            clip-path: polygon(0 40%, 100% 0%, 100% 100%, 0% 100%);
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
+            text-align: center;
+            animation: fadeInUp 1s ease-out 0.3s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.8rem;
+            background: rgba(79, 209, 197, 0.15);
+            border: 2px solid rgba(79, 209, 197, 0.4);
+            border-radius: 50px;
+            color: var(--light);
+            font-size: 0.875rem;
+            margin-bottom: 2.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(79, 209, 197, 0.2);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 8px 32px rgba(79, 209, 197, 0.2); }
+            50% { box-shadow: 0 8px 40px rgba(79, 209, 197, 0.4); }
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--primary);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            color: var(--light);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero h1 .highlight {
+            color: var(--primary);
+            text-shadow: 0 0 30px rgba(79, 209, 197, 0.5);
+            animation: textGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(79, 209, 197, 0.5); }
+            50% { text-shadow: 0 0 40px rgba(79, 209, 197, 0.8); }
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(79, 209, 197, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(79, 209, 197, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            border-color: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--light);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 6rem 5%;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* About Section */
+        .about-section {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: #2d3748;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 3rem;
+            align-items: start;
+        }
+
+        .about-text h3 {
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .about-text h3::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        .about-text h3:first-child {
+            margin-top: 0;
+        }
+
+        .about-text p {
+            color: #666666;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .about-feature-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .about-feature-card:hover {
+            transform: translateX(15px) scale(1.03);
+            border-color: var(--primary);
+            box-shadow: 0 20px 50px rgba(79, 209, 197, 0.2);
+            background: linear-gradient(135deg, #ffffff, rgba(79, 209, 197, 0.05));
+        }
+
+        .about-feature-card h4 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-bottom: 0.75rem;
+        }
+
+        .about-feature-card p {
+            color: #666666;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* SMS/Voice/WhatsApp Detail Sections */
+        .sms-detail-section {
+            background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+            color: #2d3748;
+            padding: 6rem 5%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sms-detail-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(79, 209, 197, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .sms-detail-section.alt {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .sms-detail-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 5rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sms-detail-content.reverse {
+            grid-template-columns: 350px 1fr;
+        }
+
+        .sms-detail-text h2 {
+            font-size: 2.75rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .sms-detail-text .lead {
+            font-size: 1.2rem;
+            color: #666666;
+            margin-bottom: 2.5rem;
+            line-height: 1.9;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 1rem 0;
+            color: #2d3748;
+            font-size: 1.05rem;
+            border-bottom: 2px solid #e8f4f2;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .feature-list li:hover {
+            padding-left: 1rem;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .sms-detail-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .icon-circle {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, rgba(79, 209, 197, 0.15) 0%, rgba(79, 209, 197, 0.25) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            border: 4px solid var(--primary);
+            box-shadow: 
+                0 30px 80px rgba(79, 209, 197, 0.3),
+                inset 0 0 50px rgba(79, 209, 197, 0.1);
+            position: relative;
+            animation: iconFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .icon-circle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            opacity: 0.3;
+            animation: ripple 3s ease-out infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* Features Section */
+        .features-section {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8f0f2 100%);
+            border-top: 2px solid rgba(79, 209, 197, 0.2);
+            border-bottom: 2px solid rgba(79, 209, 197, 0.2);
+        }
+
+        .features-section .section-title h2 {
+            color: #1a1a1a;
+        }
+
+        .features-section .section-title p {
+            color: #666666;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 25px 60px rgba(79, 209, 197, 0.25);
+        }
+
+        .feature-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1a1a1a;
+        }
+
+        .feature-item p {
+            color: #666666;
+            line-height: 1.7;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 5rem 5%;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(79, 209, 197, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
+            position: relative;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(79, 209, 197, 0.05), rgba(79, 209, 197, 0.1));
+            border-radius: 20px;
+            border: 2px solid rgba(79, 209, 197, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.1) rotate(2deg);
+            box-shadow: 0 20px 50px rgba(79, 209, 197, 0.3);
+            border-color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 30px rgba(79, 209, 197, 0.4);
+        }
+
+        .stat-label {
+            color: #666666;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-top: 3px solid var(--primary);
+            padding: 4rem 5% 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(79,209,197,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            font-size: 1.25rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--light);
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .newsletter-form input:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .newsletter-form button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(79, 209, 197, 0.4);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc3c7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links a {
+                font-size: 0.85rem;
+            }
+
+            .nav-links .btn {
+                padding: 0.5rem 1.25rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links a {
+                font-size: 0.9rem;
+            }
+
+            .dropdown-menu {
+                position: relative;
+                box-shadow: none;
+                border: none;
+                background: #f8f9fa;
+                margin-top: 0.5rem;
+                padding: 0.5rem;
+                border-radius: 8px;
+            }
+
+            .dropdown:hover .dropdown-menu {
+                margin-top: 0.5rem;
+            }
+
+            .dropdown-menu a {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            header {
+                padding: 1rem 3%;
+            }
+
+            .hero {
+                padding: 8rem 5% 3rem;
+            }
+
+            .section {
+                padding: 4rem 5%;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .sms-detail-content,
+            .sms-detail-content.reverse {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .sms-detail-text h2 {
+                font-size: 2rem;
+            }
+
+            .icon-circle {
+                width: 180px;
+                height: 180px;
+                font-size: 4rem;
+            }
+
+            .services-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+        <div id="loading-overlay">
+        <!-- Loader particles -->
+        <div class="loader-particle" style="--dur:2.5s;--delay:0s;--tx:60px;--ty:-120px;left:45%;top:70%;"></div>
+        <div class="loader-particle" style="--dur:3s;--delay:0.4s;--tx:-80px;--ty:-100px;left:55%;top:65%;"></div>
+        <div class="loader-particle" style="--dur:2s;--delay:0.8s;--tx:40px;--ty:-140px;left:40%;top:75%;"></div>
+        <div class="loader-particle" style="--dur:3.5s;--delay:0.2s;--tx:-50px;--ty:-110px;left:60%;top:60%;"></div>
+        <div class="loader-particle" style="--dur:2.8s;--delay:1s;--tx:70px;--ty:-90px;left:35%;top:72%;"></div>
+        <div class="loader-particle" style="--dur:2.2s;--delay:0.6s;--tx:-30px;--ty:-130px;left:65%;top:68%;"></div>
+        <!-- Spinning rings + logo -->
+        <div class="loader-logo-wrap">
+            <div class="loader-ring-outer"></div>
+            <div class="loader-ring-mid"></div>
+            <div class="loader-ring-inner"></div>
+            <div class="loader-orbit"></div>
+            <div class="loader-orbit-2"></div>
+            <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAyADUDASIAAhEBAxEB/8QAHAAAAgIDAQEAAAAAAAAAAAAAAAgFBgECAwQH/8QAMxAAAQMDAgQDBwIHAAAAAAAAAQIDBAAFBhEhBxIxUUGBsRMUMmFxg9IzhCIjJUJDlNH/xAAaAQACAwEBAAAAAAAAAAAAAAADBAABBQIG/8QAJREAAgIBBAAGAwAAAAAAAAAAAAECAxEEEiExBRMiMkFhcZHB/9oADAMBAAIRAxEAPwBt1HSqllfEbDcYle63m+x2JHi0kFxY+oSCR51I5zc3bRiN1ubA1djRXHEfUDakQeckz5r0yW6t6Q8srcWo6lRPU0euvd2KWWbRxE8auHKvhv5P7R78a6J4xcPldL6T+1d/GlDjMfKrAbHc4sJmbJt8lmM9+m6tshKvoaL5MRSeqkuhokcW8DUdr0f9Z38atOP3+036MZNpnsy2wdFch3T9R1HnSdxmOm1XrhPOlWrMreqOtSUPupZdSDspKjpv61UqVjgDDxCW9KS4GfCtqK5pO1FLGtkq/FXfh5fh3guelJXGY+VOtxOGuBXwd4TnpSeRWOm1M0dGfqp4Z9MtLNjwrBbBkKbIzdb3d/brbdlnmajBtYA5UdCrcHU9j3q+ZHlWTW/AsYudygsTGJyHffGZDA9msFRKBoPh/h6aeFRLl2g2PhZh0tePxrrNDckRnZQKmY/8wako6KJOmmvao2NxMyqSstXdcS6wl7LiSIyPZkdhoARp4Ve1y5wBnfGvjdjKXS/HZwzqz2ZNus9+s0JUBu5NrU5G5+ZKFJP9p7fKvLhDPLlFsOnSSj1FW7iN7lIxXGXYEBcFlSHSmOpRUEakbAnfTWoHDmdMitx06SEetdx9pl6mSjekvr+DDt9KKwjpRSZ6dMgeI6CrB70kDUmG5t5UpkZjptTozY7cmO4w6gKbcSUqB8Qa+C5HwlvcO4uKszbc2GpRLY9olK0DsQojXyo9MkuGZ2vrm8OKyQWH5ddbLDFtWhmfaySVQ5KOZG51OnY1ZGr7iMM++2fF9J69+WS5zssnulPj51HM8PMsR8VpI+83+Ve5jA8mT8VrI+6j8qL6H8mVKepSwov9ZwR90ulyvcpMi4yFOqSNEJ6JQOwHhUliTH9fgaD/ADo9a9sfCshTprbiPuo/7VywvEHoMpE648gcR+m0k66HuTUlOKQtXptRdcsxffbLugbUVukaCikz16Rk1yXRRURJGlYooqAmbdq6N0UVGdxOlFFFUEP/2Q==" alt="LeoMox Logo">
+        </div>
+        <!-- Brand -->
+        <div class="loader-brand">
+            <div class="loader-brand-name"><span class="leo">Leo</span><span class="mox">Mox</span></div>
+            <div class="loader-brand-sub">IT Solutions</div>
+        </div>
+        <!-- Progress bar -->
+        <div class="loader-bar-wrap">
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <div class="bg-animation">
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+    </div>
+
+    <header>
+        <nav>
+            <a href="#home" class="logo">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#2D3748;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#4FD1C5;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="40" height="40" rx="8" fill="url(#logoGrad)"/>
+                    <path d="M12 14L20 10L28 14V26L20 30L12 26V14Z" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M20 10V18M20 18L12 22M20 18L28 22" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="20" cy="18" r="2" fill="#ffffff"/>
+                </svg>
+                <div style="display: flex; flex-direction: column;">
+                    <span style="font-size: 1.25rem; font-weight: 700;">
+                        <span style="color: #4fd1c5;">Leo</span><span style="color: #2d3748;">Mox</span>
+                    </span>
+                    <span style="font-size: 0.7rem; font-weight: 400; color: #718096; letter-spacing: 0.5px;">IT SOLUTIONS</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li class="dropdown">
+                    <a href="#services" class="dropdown-toggle">SMS Solutions <span class="arrow">▼</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#promotional-sms">Promotional SMS</a></li>
+                        <li><a href="#transactional-sms">Transactional SMS</a></li>
+                        <li><a href="#otp-sms">OTP SMS</a></li>
+                        <li><a href="#api-solutions">API Solutions</a></li>
+                        <li><a href="#short-url">Short URL</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#voice-solutions" class="dropdown-toggle">Voice Solutions <span class="arrow">▼</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#obd-calls">OBD Calls</a></li>
+                        <li><a href="#voice-calls">Voice Calls</a></li>
+                        <li><a href="#voice-conference">Voice Conference</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#whatsapp-solutions" class="dropdown-toggle">Whatsapp Solutions <span class="arrow">▼</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#promotional-whatsapp">Promotional Whatsapp</a></li>
+                        <li><a href="#utility-whatsapp">Utility Whatsapp</a></li>
+                        <li><a href="#chatbot">Chatbot</a></li>
+                    </ul>
+                </li>
+                <li><a href="#rcs">RCS</a></li>
+                <li><a href="#dlt">DLT</a></li>
+                <li><a href="#developers">Developers</a></li>
+                <li><a href="#contact" class="btn btn-primary">Contact Us</a></li>
+                <li><a href="#login" class="btn btn-secondary">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Premium SMS & Web Solutions</div>
+            <h1>Innovative Digital &<br><span class="highlight">SMS Solutions</span></h1>
+            <p>Empowering your business with Promotional, Transactional, and OTP SMS services alongside cutting-edge Website Development tailored for growth.</p>
+            <div class="cta-buttons">
+                <a href="#contact" class="btn btn-primary">Get Started →</a>
+                <a href="#services" class="btn btn-secondary">Explore Services</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section about-section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>About Us</h2>
+                <p>Pioneering Digital Communication Solutions Since Our Inception</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text fade-in">
+                    <h3>Who We Are</h3>
+                    <p>LeoMox IT Solutions is a leading provider of comprehensive SMS and web development services. We specialize in delivering reliable, scalable, and innovative communication solutions that help businesses connect with their customers effectively.</p>
+                    
+                    <h3>Our Mission</h3>
+                    <p>To empower businesses with cutting-edge digital communication tools that drive growth, enhance customer engagement, and streamline operations. We believe in delivering excellence through innovation, reliability, and unwavering commitment to our clients' success.</p>
+                    
+                    <h3>Why Choose Us</h3>
+                    <p>With years of experience in the IT and communication industry, we understand the unique challenges businesses face. Our team of experts is dedicated to providing solutions that are not just technologically advanced but also user-friendly and cost-effective.</p>
+                </div>
+                <div class="about-features fade-in">
+                    <div class="about-feature-card">
+                        <h4>🎯 Expert Team</h4>
+                        <p>Skilled professionals with deep industry knowledge</p>
+                    </div>
+                    <div class="about-feature-card">
+                        <h4>🚀 Innovation First</h4>
+                        <p>Cutting-edge technology and forward-thinking solutions</p>
+                    </div>
+                    <div class="about-feature-card">
+                        <h4>💼 Business Focus</h4>
+                        <p>Solutions tailored to your specific business needs</p>
+                    </div>
+                    <div class="about-feature-card">
+                        <h4>🤝 Trusted Partner</h4>
+                        <p>Long-term relationships built on reliability and trust</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Overview Section -->
+    <section id="services" class="section features-section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Our Services</h2>
+                <p>Everything you need to power your business communication</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card fade-in" onclick="showPage('promotional-sms')" style="cursor:pointer;">
+                    <div class="service-icon">📱</div>
+                    <h3>SMS Solutions</h3>
+                    <p>Promotional, Transactional, OTP SMS and API integrations for all your messaging needs.</p>
+                </div>
+                <div class="service-card fade-in" onclick="showPage('obd-calls')" style="cursor:pointer;">
+                    <div class="service-icon">📞</div>
+                    <h3>Voice Solutions</h3>
+                    <p>OBD Calls, Voice Calls and Conference services for seamless voice communication.</p>
+                </div>
+                <div class="service-card fade-in" onclick="showPage('promotional-whatsapp')" style="cursor:pointer;">
+                    <div class="service-icon">💬</div>
+                    <h3>WhatsApp Solutions</h3>
+                    <p>Promotional & Utility WhatsApp messaging plus intelligent Chatbot automation.</p>
+                </div>
+                <div class="service-card fade-in" onclick="showPage('rcs')" style="cursor:pointer;">
+                    <div class="service-icon">🌐</div>
+                    <h3>RCS Messaging</h3>
+                    <p>Next-generation rich communication services for enhanced customer engagement.</p>
+                </div>
+                <div class="service-card fade-in" onclick="showPage('dlt')" style="cursor:pointer;">
+                    <div class="service-icon">📋</div>
+                    <h3>DLT Compliance</h3>
+                    <p>Complete DLT registration and TRAI compliance support for your SMS campaigns.</p>
+                </div>
+                <div class="service-card fade-in" onclick="showPage('developers')" style="cursor:pointer;">
+                    <div class="service-icon">👨‍💻</div>
+                    <h3>Developer APIs</h3>
+                    <p>RESTful APIs, SDKs and sandbox environment for seamless integrations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SMS Solutions Sections -->
+    <section id="promotional-sms" class="section sms-detail-section">
+        <div class="container">
+            <div class="sms-detail-content">
+                <div class="sms-detail-text fade-in">
+                    <h2>Promotional SMS</h2>
+                    <p class="lead">Boost your marketing campaigns with our powerful promotional SMS service. Reach thousands of customers instantly with targeted messages.</p>
+                    <ul class="feature-list">
+                        <li>✓ Bulk SMS delivery to wide audiences</li>
+                        <li>✓ Perfect for offers, discounts, and announcements</li>
+                        <li>✓ Schedule campaigns in advance</li>
+                        <li>✓ Detailed analytics and reporting</li>
+                        <li>✓ High delivery rates</li>
+                    </ul>
+                </div>
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">📢</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="transactional-sms" class="section sms-detail-section alt">
+        <div class="container">
+            <div class="sms-detail-content reverse">
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">📧</div>
+                </div>
+                <div class="sms-detail-text fade-in">
+                    <h2>Transactional SMS</h2>
+                    <p class="lead">Ensure critical information reaches your customers with our reliable transactional SMS service.</p>
+                    <ul class="feature-list">
+                        <li>✓ Order confirmations and updates</li>
+                        <li>✓ Booking confirmations</li>
+                        <li>✓ Payment alerts and receipts</li>
+                        <li>✓ Account notifications</li>
+                        <li>✓ Priority delivery routing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="otp-sms" class="section sms-detail-section">
+        <div class="container">
+            <div class="sms-detail-content">
+                <div class="sms-detail-text fade-in">
+                    <h2>OTP SMS</h2>
+                    <p class="lead">Secure user authentication with lightning-fast OTP delivery. Protect your platform with two-factor authentication.</p>
+                    <ul class="feature-list">
+                        <li>✓ Ultra-fast delivery (within seconds)</li>
+                        <li>✓ High success rate (99.9%+)</li>
+                        <li>✓ Customizable OTP templates</li>
+                        <li>✓ Multiple retry options</li>
+                        <li>✓ Secure and encrypted</li>
+                    </ul>
+                </div>
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">🔐</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="api-solutions" class="section sms-detail-section alt">
+        <div class="container">
+            <div class="sms-detail-content reverse">
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">⚙️</div>
+                </div>
+                <div class="sms-detail-text fade-in">
+                    <h2>API Solutions</h2>
+                    <p class="lead">Seamlessly integrate SMS capabilities into your applications with our robust API solutions.</p>
+                    <ul class="feature-list">
+                        <li>✓ RESTful API architecture</li>
+                        <li>✓ Easy integration with documentation</li>
+                        <li>✓ Multiple programming language support</li>
+                        <li>✓ Real-time delivery reports</li>
+                        <li>✓ Scalable infrastructure</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="short-url" class="section sms-detail-section">
+        <div class="container">
+            <div class="sms-detail-content">
+                <div class="sms-detail-text fade-in">
+                    <h2>Short URL</h2>
+                    <p class="lead">Optimize your SMS campaigns with our URL shortening service. Track clicks and engagement effectively.</p>
+                    <ul class="feature-list">
+                        <li>✓ Shorten long URLs for SMS</li>
+                        <li>✓ Track click rates and analytics</li>
+                        <li>✓ Custom branded short links</li>
+                        <li>✓ QR code generation</li>
+                        <li>✓ Link expiry management</li>
+                    </ul>
+                </div>
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">🔗</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Voice Solutions Sections -->
+    <section id="obd-calls" class="section sms-detail-section alt">
+        <div class="container">
+            <div class="sms-detail-content reverse">
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">📞</div>
+                </div>
+                <div class="sms-detail-text fade-in">
+                    <h2>OBD Calls</h2>
+                    <p class="lead">Outbound Dialer service to reach thousands of customers with pre-recorded voice messages instantly.</p>
+                    <ul class="feature-list">
+                        <li>✓ Automated voice broadcasting</li>
+                        <li>✓ Pre-recorded message delivery</li>
+                        <li>✓ Schedule campaigns in advance</li>
+                        <li>✓ Real-time call analytics</li>
+                        <li>✓ Cost-effective bulk calling</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="voice-calls" class="section sms-detail-section">
+        <div class="container">
+            <div class="sms-detail-content">
+                <div class="sms-detail-text fade-in">
+                    <h2>Voice Calls</h2>
+                    <p class="lead">Crystal clear voice calling solutions for your business communication needs with advanced features.</p>
+                    <ul class="feature-list">
+                        <li>✓ HD voice quality</li>
+                        <li>✓ Click-to-call integration</li>
+                        <li>✓ Call recording and monitoring</li>
+                        <li>✓ IVR system integration</li>
+                        <li>✓ Global connectivity</li>
+                    </ul>
+                </div>
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">☎️</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="voice-conference" class="section sms-detail-section alt">
+        <div class="container">
+            <div class="sms-detail-content reverse">
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">🎤</div>
+                </div>
+                <div class="sms-detail-text fade-in">
+                    <h2>Voice Conference</h2>
+                    <p class="lead">Host seamless multi-party conference calls with advanced moderator controls and features.</p>
+                    <ul class="feature-list">
+                        <li>✓ Support for multiple participants</li>
+                        <li>✓ Moderator controls (mute/unmute)</li>
+                        <li>✓ Conference recording</li>
+                        <li>✓ Dial-in and dial-out options</li>
+                        <li>✓ Screen sharing capabilities</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Solutions Sections -->
+    <section id="promotional-whatsapp" class="section sms-detail-section">
+        <div class="container">
+            <div class="sms-detail-content">
+                <div class="sms-detail-text fade-in">
+                    <h2>Promotional WhatsApp</h2>
+                    <p class="lead">Engage customers directly on WhatsApp with promotional messages, offers, and marketing campaigns.</p>
+                    <ul class="feature-list">
+                        <li>✓ Rich media messaging (images, videos)</li>
+                        <li>✓ Bulk WhatsApp campaigns</li>
+                        <li>✓ Template-based messaging</li>
+                        <li>✓ High engagement rates</li>
+                        <li>✓ Delivery and read receipts</li>
+                    </ul>
+                </div>
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">💬</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="utility-whatsapp" class="section sms-detail-section alt">
+        <div class="container">
+            <div class="sms-detail-content reverse">
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">✉️</div>
+                </div>
+                <div class="sms-detail-text fade-in">
+                    <h2>Utility WhatsApp</h2>
+                    <p class="lead">Send important transactional and service messages to customers via WhatsApp Business API.</p>
+                    <ul class="feature-list">
+                        <li>✓ Order updates and confirmations</li>
+                        <li>✓ Payment notifications</li>
+                        <li>✓ Appointment reminders</li>
+                        <li>✓ Customer support messages</li>
+                        <li>✓ OTP and verification codes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="chatbot" class="section sms-detail-section">
+        <div class="container">
+            <div class="sms-detail-content">
+                <div class="sms-detail-text fade-in">
+                    <h2>WhatsApp Chatbot</h2>
+                    <p class="lead">Automate customer interactions with intelligent WhatsApp chatbots powered by AI and NLP.</p>
+                    <ul class="feature-list">
+                        <li>✓ 24/7 automated customer support</li>
+                        <li>✓ Natural language processing</li>
+                        <li>✓ Multi-language support</li>
+                        <li>✓ Quick reply buttons</li>
+                        <li>✓ Seamless human handover</li>
+                    </ul>
+                </div>
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">🤖</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RCS Section -->
+    <section id="rcs" class="section sms-detail-section alt">
+        <div class="container">
+            <div class="sms-detail-content reverse">
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">💎</div>
+                </div>
+                <div class="sms-detail-text fade-in">
+                    <h2>RCS (Rich Communication Services)</h2>
+                    <p class="lead">Next-generation messaging with rich media, interactive elements, and advanced features beyond traditional SMS.</p>
+                    <ul class="feature-list">
+                        <li>✓ Rich media support (images, videos, carousels)</li>
+                        <li>✓ Interactive buttons and cards</li>
+                        <li>✓ Read receipts and typing indicators</li>
+                        <li>✓ Branded messaging experience</li>
+                        <li>✓ Group messaging capabilities</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DLT Section -->
+    <section id="dlt" class="section sms-detail-section">
+        <div class="container">
+            <div class="sms-detail-content">
+                <div class="sms-detail-text fade-in">
+                    <h2>DLT (Distributed Ledger Technology)</h2>
+                    <p class="lead">Complete DLT registration and compliance support for your SMS campaigns as per TRAI regulations.</p>
+                    <ul class="feature-list">
+                        <li>✓ DLT registration assistance</li>
+                        <li>✓ Template approval support</li>
+                        <li>✓ Sender ID registration</li>
+                        <li>✓ Entity and header management</li>
+                        <li>✓ Compliance consulting</li>
+                    </ul>
+                </div>
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">📋</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Developers Section -->
+    <section id="developers" class="section sms-detail-section alt">
+        <div class="container">
+            <div class="sms-detail-content reverse">
+                <div class="sms-detail-icon fade-in">
+                    <div class="icon-circle">👨‍💻</div>
+                </div>
+                <div class="sms-detail-text fade-in">
+                    <h2>Developer Resources</h2>
+                    <p class="lead">Comprehensive API documentation, SDKs, and tools to integrate our services into your applications.</p>
+                    <ul class="feature-list">
+                        <li>✓ RESTful API documentation</li>
+                        <li>✓ SDKs for multiple languages (PHP, Python, Java, Node.js)</li>
+                        <li>✓ Code examples and tutorials</li>
+                        <li>✓ Sandbox environment for testing</li>
+                        <li>✓ Dedicated developer support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="section features-section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Why Choose LeoMox?</h2>
+                <p>We combine technical expertise with a steadfast commitment to reliability. Just like the industry leaders, we ensure your business communication is uninterrupted.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item fade-in">
+                    <h3>⚡ Essential Time Management</h3>
+                    <p>Efficient delivery systems that save you time with automated scheduling.</p>
+                </div>
+                <div class="feature-item fade-in">
+                    <h3>🛡️ Reliable Support 24/7</h3>
+                    <p>Dedicated technical support team ready to assist you anytime.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item fade-in">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+                <div class="stat-item fade-in">
+                    <div class="stat-number">2M+</div>
+                    <div class="stat-label">Delivered</div>
+                </div>
+                <div class="stat-item fade-in">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support</div>
+                </div>
+                <div class="stat-item fade-in">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">Clients</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Page -->
+    <section id="login" class="section sms-detail-section">
+        <div class="container">
+            <div style="max-width:420px;margin:0 auto;background:rgba(255,255,255,0.05);border:1px solid rgba(79,209,197,0.2);border-radius:20px;padding:2.5rem;">
+                <h2 style="text-align:center;margin-bottom:0.5rem;">Welcome Back</h2>
+                <p style="text-align:center;color:#bdc3c7;margin-bottom:2rem;">Sign in to your LeoMox account</p>
+                <div style="display:flex;flex-direction:column;gap:1.2rem;">
+                    <div>
+                        <label style="display:block;margin-bottom:0.4rem;font-size:0.9rem;color:#bdc3c7;">Email / Username</label>
+                        <input type="email" placeholder="Enter your email" style="width:100%;padding:0.8rem 1rem;border-radius:10px;border:1px solid rgba(79,209,197,0.3);background:rgba(255,255,255,0.07);color:#fff;font-size:1rem;outline:none;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:0.4rem;font-size:0.9rem;color:#bdc3c7;">Password</label>
+                        <input type="password" placeholder="Enter your password" style="width:100%;padding:0.8rem 1rem;border-radius:10px;border:1px solid rgba(79,209,197,0.3);background:rgba(255,255,255,0.07);color:#fff;font-size:1rem;outline:none;">
+                    </div>
+                    <button style="width:100%;padding:0.9rem;border-radius:10px;background:linear-gradient(135deg,#4fd1c5,#38b2ac);color:#fff;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">Login →</button>
+                    <p style="text-align:center;font-size:0.85rem;color:#bdc3c7;">Don't have an account? <a href="#contact" style="color:#4fd1c5;text-decoration:none;">Contact Us</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact" style="display:block !important;">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 40px; height: 40px;">
+                        <defs>
+                            <linearGradient id="footerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4FD1C5;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#38B2AC;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="40" height="40" rx="8" fill="url(#footerGrad)"/>
+                        <path d="M12 14L20 10L28 14V26L20 30L12 26V14Z" stroke="#2D3748" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M20 10V18M20 18L12 22M20 18L28 22" stroke="#2D3748" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="20" cy="18" r="2" fill="#2D3748"/>
+                    </svg>
+                    <div style="font-family: 'Outfit', sans-serif;">
+                        <div style="font-size: 1.25rem; font-weight: 700;">
+                            <span style="color: #4fd1c5;">Leo</span><span style="color: #ffffff;">Mox</span>
+                        </div>
+                        <div style="font-size: 0.7rem; font-weight: 400; color: #bdc3c7; letter-spacing: 0.5px;">IT SOLUTIONS</div>
+                    </div>
+                </div>
+                <p style="color: #bdc3c7; margin-top: 1rem;">Trusted partner for IT and Communication solutions. We help businesses connect and grow.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#features">Features</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li style="color: #bdc3c7;">Besides Modal Dairy Store,<br>RS Furniture Building,<br>Kolanukonda, Mangalagiri,<br>Guntur, Andhra Pradesh</li>
+                    <li style="color: #bdc3c7; margin-top: 1rem;">📱 +91 95739 99700</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Newsletter</h4>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 LeoMox IT SOLUTIONS. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // ── Loading Overlay ───────────────────────────────────────────────
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        // Hide loading overlay after 1s on initial page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                loadingOverlay.classList.add('hide');
+            }, 600);
+        });
+
+        function showLoadingThen(callback) {
+            loadingOverlay.classList.remove('hide');
+            setTimeout(() => {
+                callback();
+                loadingOverlay.classList.add('hide');
+            }, 600);
+        }
+
+        // ── SPA Page Routing ──────────────────────────────────────────────
+        const ALL_SECTIONS = [
+            'home','about','services',
+            'promotional-sms','transactional-sms','otp-sms','api-solutions','short-url',
+            'obd-calls','voice-calls','voice-conference',
+            'promotional-whatsapp','utility-whatsapp','chatbot',
+            'rcs','dlt','developers','features','login'
+        ];
+
+        // Add spa-section class to all sections
+        ALL_SECTIONS.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('spa-section');
+        });
+        // Also handle stats section (no id) — give it one
+        const statsSec = document.querySelector('.stats-section');
+        if (statsSec) { statsSec.id = 'stats'; statsSec.classList.add('spa-section'); }
+
+        // Features section is included in home pages group
+        const HOME_EXTRAS = ['features', 'stats'];
+
+        function showPage(targetId) {
+            // Hide all sections
+            document.querySelectorAll('.spa-section').forEach(s => {
+                s.classList.remove('active');
+            });
+
+            const isHome = (targetId === 'home' || targetId === '' || targetId === null);
+
+            if (isHome) {
+                const homeEl = document.getElementById('home');
+                if (homeEl) homeEl.classList.add('active');
+                HOME_EXTRAS.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('active');
+                });
+            } else if (targetId === 'contact') {
+                // Show the footer by scrolling to it — keep current page visible
+                // Re-show whichever section was active, or just scroll to footer
+                const footer = document.getElementById('contact');
+                if (footer) {
+                    // Show the contact/login section as the page, then scroll to footer
+                    const loginEl = document.getElementById('login');
+                    if (loginEl) {
+                        loginEl.classList.add('active');
+                        loginEl.querySelectorAll('.fade-in').forEach(el => {
+                            el.classList.remove('visible');
+                            setTimeout(() => el.classList.add('visible'), 100);
+                        });
+                    }
+                    setTimeout(() => {
+                        footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                    return;
+                }
+            } else {
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.classList.add('active');
+                    target.querySelectorAll('.fade-in').forEach(el => {
+                        el.classList.remove('visible');
+                        setTimeout(() => el.classList.add('visible'), 100);
+                    });
+                }
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Intercept all anchor link clicks
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                const targetId = href.replace('#', '');
+
+                // Close dropdowns
+                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+
+                // Only logo (.logo) and #home link navigate to home
+                const isHomeLink = (targetId === 'home' || targetId === '');
+                const isLogoClick = this.classList.contains('logo');
+
+                if (!isHomeLink && !isLogoClick && (targetId === 'home' || targetId === '')) return;
+
+                showLoadingThen(() => showPage(targetId));
+            });
+        });
+
+        // onclick handlers on service cards
+        window.showPage = showPage;
+
+        // Init: show home on load (loading overlay handles the delay)
+        showPage('home');
+
+        // ── Scroll animations (for newly activated sections) ─────────────
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // ── Newsletter form ────────────────────────────────────────────────
+        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for subscribing!');
+            this.reset();
+        });
+
+        // ── Dropdown for touch devices ────────────────────────────────────
+        const dropdowns = document.querySelectorAll('.dropdown');
+        dropdowns.forEach(dropdown => {
+            const toggle = dropdown.querySelector('.dropdown-toggle');
+            if (toggle) {
+                toggle.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        dropdowns.forEach(d => { if (d !== dropdown) d.classList.remove('active'); });
+                        dropdown.classList.toggle('active');
+                    }
+                });
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                dropdowns.forEach(d => d.classList.remove('active'));
+            }
+        });
+    </script>
+</body>
+</html>
