@@ -1242,40 +1242,6 @@ to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .nav-links {
-                gap: 1.5rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .nav-links a {
-                font-size: 0.9rem;
-            }
-
-            .dropdown-menu {
-                position: relative;
-                box-shadow: none;
-                border: none;
-                background: #f8f9fa;
-                margin-top: 0.5rem;
-                padding: 0.5rem;
-                border-radius: 8px;
-            }
-
-            .dropdown:hover .dropdown-menu {
-                margin-top: 0.5rem;
-            }
-
-            .dropdown-menu a {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-
             header {
                 padding: 1rem 3%;
             }
@@ -1312,6 +1278,187 @@ to { opacity: 1; transform: translateY(0); }
             .services-grid,
             .features-grid {
                 grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Hamburger Menu ── */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 42px;
+            height: 42px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            gap: 5px;
+            transition: background 0.2s;
+            z-index: 1100;
+            flex-shrink: 0;
+        }
+        .hamburger:hover {
+            background: rgba(79,209,197,0.1);
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: #2d3748;
+            border-radius: 99px;
+            transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), opacity 0.3s, width 0.3s;
+            transform-origin: center;
+        }
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7.5px) rotate(45deg);
+        }
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+            width: 0;
+        }
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7.5px) rotate(-45deg);
+        }
+
+        /* Mobile overlay panel */
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1050;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .mobile-nav-overlay.open {
+            opacity: 1;
+        }
+
+        .mobile-nav-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: min(320px, 85vw);
+            height: 100vh;
+            background: #ffffff;
+            z-index: 1100;
+            transform: translateX(100%);
+            transition: transform 0.38s cubic-bezier(0.23,1,0.32,1);
+            overflow-y: auto;
+            box-shadow: -8px 0 40px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+        }
+        .mobile-nav-panel.open {
+            transform: translateX(0);
+        }
+
+        .mobile-nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(79,209,197,0.15);
+        }
+        .mobile-nav-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: rgba(79,209,197,0.1);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2d3748;
+            transition: background 0.2s;
+        }
+        .mobile-nav-close:hover { background: rgba(79,209,197,0.25); }
+
+        .mobile-nav-links {
+            list-style: none;
+            padding: 1rem 0;
+            flex: 1;
+        }
+        .mobile-nav-links > li > a,
+        .mobile-nav-links > li > .mobile-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1.5rem;
+            color: #2d3748;
+            font-weight: 500;
+            font-size: 1rem;
+            text-decoration: none;
+            border: none;
+            background: transparent;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            font-family: 'Outfit', sans-serif;
+        }
+        .mobile-nav-links > li > a:hover,
+        .mobile-nav-links > li > .mobile-dropdown-toggle:hover {
+            background: rgba(79,209,197,0.08);
+            color: #38b2ac;
+        }
+        .mobile-dropdown-toggle .arrow {
+            font-size: 0.7rem;
+            transition: transform 0.3s;
+        }
+        .mobile-dropdown-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Sub-items */
+        .mobile-submenu {
+            list-style: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+            background: rgba(79,209,197,0.04);
+        }
+        .mobile-submenu.open {
+            max-height: 400px;
+        }
+        .mobile-submenu a {
+            display: block;
+            padding: 0.65rem 2.5rem;
+            color: #718096;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: color 0.2s, background 0.2s;
+        }
+        .mobile-submenu a:hover {
+            color: #38b2ac;
+            background: rgba(79,209,197,0.08);
+        }
+
+        .mobile-nav-footer {
+            padding: 1.2rem 1.5rem;
+            border-top: 1px solid rgba(79,209,197,0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .mobile-nav-footer .btn {
+            text-align: center;
+            padding: 0.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .hamburger { display: flex; }
+            .nav-links { display: none !important; }
+            .mobile-nav-overlay { display: block; }
+            nav {
+                flex-direction: row !important;
+                gap: 0 !important;
             }
         }
     </style>
@@ -1385,6 +1532,9 @@ to { opacity: 1; transform: translateY(0); }
                     <span style="font-size: 0.7rem; font-weight: 400; color: #718096; letter-spacing: 0.5px;">IT SOLUTIONS</span>
                 </div>
             </a>
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About Us</a></li>
@@ -1422,6 +1572,58 @@ to { opacity: 1; transform: translateY(0); }
             </ul>
         </nav>
     </header>
+    <!-- Mobile Nav Overlay + Panel -->
+    <div class="mobile-nav-overlay" id="mobileOverlay"></div>
+    <div class="mobile-nav-panel" id="mobilePanel">
+        <div class="mobile-nav-header">
+            <a href="#home" class="logo mobile-logo-link" style="text-decoration:none;display:flex;align-items:center;gap:0.6rem;">
+                <img src="" alt="LeoMox" style="width:36px;height:36px;border-radius:8px;object-fit:cover;">
+                <div>
+                    <div style="font-size:1.1rem;font-weight:700;"><span style="color:#4fd1c5;">Leo</span><span style="color:#2d3748;">Mox</span></div>
+                    <div style="font-size:0.6rem;color:#718096;letter-spacing:0.5px;">IT SOLUTIONS</div>
+                </div>
+            </a>
+            <button class="mobile-nav-close" id="mobileClose">✕</button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li>
+                <button class="mobile-dropdown-toggle">SMS Solutions <span class="arrow">▼</span></button>
+                <ul class="mobile-submenu">
+                    <li><a href="#promotional-sms">Promotional SMS</a></li>
+                    <li><a href="#transactional-sms">Transactional SMS</a></li>
+                    <li><a href="#otp-sms">OTP SMS</a></li>
+                    <li><a href="#api-solutions">API Solutions</a></li>
+                    <li><a href="#short-url">Short URL</a></li>
+                </ul>
+            </li>
+            <li>
+                <button class="mobile-dropdown-toggle">Voice Solutions <span class="arrow">▼</span></button>
+                <ul class="mobile-submenu">
+                    <li><a href="#obd-calls">OBD Calls</a></li>
+                    <li><a href="#voice-calls">Voice Calls</a></li>
+                    <li><a href="#voice-conference">Voice Conference</a></li>
+                </ul>
+            </li>
+            <li>
+                <button class="mobile-dropdown-toggle">WhatsApp Solutions <span class="arrow">▼</span></button>
+                <ul class="mobile-submenu">
+                    <li><a href="#promotional-whatsapp">Promotional WhatsApp</a></li>
+                    <li><a href="#utility-whatsapp">Utility WhatsApp</a></li>
+                    <li><a href="#chatbot">Chatbot</a></li>
+                </ul>
+            </li>
+            <li><a href="#rcs">RCS</a></li>
+            <li><a href="#dlt">DLT</a></li>
+            <li><a href="#developers">Developers</a></li>
+        </ul>
+        <div class="mobile-nav-footer">
+            <a href="#contact" class="btn btn-primary">Contact Us</a>
+            <a href="#login" class="btn btn-secondary">Login</a>
+        </div>
+    </div>
+
 
     <section id="home" class="hero">
         <div class="hero-content">
@@ -2083,6 +2285,56 @@ to { opacity: 1; transform: translateY(0); }
             if (!e.target.closest('.dropdown')) {
                 dropdowns.forEach(d => d.classList.remove('active'));
             }
+        });
+
+        // ── Mobile Navigation ─────────────────────────────────────────────
+        const hamburger = document.getElementById('hamburger');
+        const mobilePanel = document.getElementById('mobilePanel');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        function openMenu() {
+            hamburger.classList.add('open');
+            mobilePanel.classList.add('open');
+            mobileOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMenu() {
+            hamburger.classList.remove('open');
+            mobilePanel.classList.remove('open');
+            mobileOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.contains('open') ? closeMenu() : openMenu();
+        });
+        document.getElementById('mobileClose').addEventListener('click', closeMenu);
+        mobileOverlay.addEventListener('click', closeMenu);
+
+        // Mobile sub-dropdowns
+        document.querySelectorAll('.mobile-dropdown-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const submenu = btn.nextElementSibling;
+                const isOpen = submenu.classList.contains('open');
+                // Close all
+                document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('open'));
+                document.querySelectorAll('.mobile-dropdown-toggle').forEach(b => b.classList.remove('open'));
+                if (!isOpen) {
+                    submenu.classList.add('open');
+                    btn.classList.add('open');
+                }
+            });
+        });
+
+        // Close menu when any mobile nav link is clicked
+        document.querySelectorAll('.mobile-nav-links a, .mobile-nav-footer a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                const targetId = href.replace('#', '');
+                closeMenu();
+                showLoadingThen(() => showPage(targetId));
+            });
         });
     </script>
 </body>
