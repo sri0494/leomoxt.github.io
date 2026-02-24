@@ -517,13 +517,13 @@ to { opacity: 1; transform: translateY(0); }
             transition: transform 0.3s;
         }
 
-        .dropdown:hover .arrow {
+        .dropdown.active .arrow {
             transform: rotate(180deg);
         }
 
         .dropdown-menu {
             position: absolute;
-            top: 100%;
+            top: calc(100% + 8px);
             left: 0;
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
@@ -532,20 +532,21 @@ to { opacity: 1; transform: translateY(0); }
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             list-style: none;
             padding: 0.75rem 0;
-            margin-top: 1rem;
             opacity: 0;
             visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform: translateY(-8px);
+            transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
             z-index: 1000;
             border: 1px solid rgba(79, 209, 197, 0.2);
         }
 
-        .dropdown:hover .dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            margin-top: 0.5rem;
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
         }
 
         .dropdown-menu li {
@@ -1461,6 +1462,186 @@ to { opacity: 1; transform: translateY(0); }
                 gap: 0 !important;
             }
         }
+        /* ── Login Page ── */
+        .login-page-wrap {
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .login-page-title {
+            margin-bottom: 2.5rem;
+        }
+        .login-page-title h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        .login-page-title p {
+            color: #bdc3c7;
+            font-size: 1rem;
+        }
+        .login-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 640px) {
+            .login-cards { grid-template-columns: 1fr; }
+        }
+        .login-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(79,209,197,0.2);
+            border-radius: 20px;
+            padding: 2rem 1.8rem;
+            text-align: left;
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .login-card:hover {
+            border-color: rgba(79,209,197,0.5);
+            box-shadow: 0 12px 40px rgba(79,209,197,0.12);
+            transform: translateY(-3px);
+        }
+        .login-card-icon {
+            font-size: 2.4rem;
+            margin-bottom: 0.25rem;
+        }
+        .login-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+        }
+        .login-card-desc {
+            color: #9aa5b4;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .login-open-btn {
+            margin-top: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Outfit', sans-serif;
+            width: 100%;
+        }
+        .admin-open-btn {
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            color: #4fd1c5;
+            border: 1px solid rgba(79,209,197,0.3);
+        }
+        .user-open-btn {
+            background: linear-gradient(135deg, #4fd1c5, #38b2ac);
+            color: #fff;
+        }
+        .login-open-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79,209,197,0.25);
+        }
+
+        /* Expanded form fields */
+        .login-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            animation: fieldsIn 0.3s ease;
+        }
+        @keyframes fieldsIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .login-field label {
+            display: block;
+            font-size: 0.85rem;
+            color: #bdc3c7;
+            margin-bottom: 0.35rem;
+            font-weight: 500;
+        }
+        .login-field input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(79,209,197,0.3);
+            background: rgba(255,255,255,0.07);
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            font-family: 'Outfit', sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .login-field input:focus {
+            border-color: rgba(79,209,197,0.7);
+            box-shadow: 0 0 0 3px rgba(79,209,197,0.1);
+        }
+        .login-field input::placeholder { color: rgba(255,255,255,0.3); }
+        .password-wrap {
+            position: relative;
+        }
+        .password-wrap input { padding-right: 3rem; }
+        .toggle-pass {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .toggle-pass:hover { opacity: 1; }
+        .login-btn {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 0.25rem;
+        }
+        .admin-btn {
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            color: #4fd1c5;
+            border: 1px solid rgba(79,209,197,0.3);
+        }
+        .user-btn {
+            background: linear-gradient(135deg, #4fd1c5, #38b2ac);
+            color: #fff;
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79,209,197,0.25);
+        }
+        .login-back-btn {
+            background: none;
+            border: none;
+            color: #9aa5b4;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            text-align: center;
+            padding: 0.25rem;
+            transition: color 0.2s;
+        }
+        .login-back-btn:hover { color: #4fd1c5; }
+        .login-footer-note {
+            color: #9aa5b4;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
     </style>
 </head>
 <body>
@@ -2063,21 +2244,70 @@ to { opacity: 1; transform: translateY(0); }
     <!-- Login Page -->
     <section id="login" class="section sms-detail-section">
         <div class="container">
-            <div style="max-width:420px;margin:0 auto;background:rgba(255,255,255,0.05);border:1px solid rgba(79,209,197,0.2);border-radius:20px;padding:2.5rem;">
-                <h2 style="text-align:center;margin-bottom:0.5rem;">Welcome Back</h2>
-                <p style="text-align:center;color:#bdc3c7;margin-bottom:2rem;">Sign in to your LeoMox account</p>
-                <div style="display:flex;flex-direction:column;gap:1.2rem;">
-                    <div>
-                        <label style="display:block;margin-bottom:0.4rem;font-size:0.9rem;color:#bdc3c7;">Email / Username</label>
-                        <input type="email" placeholder="Enter your email" style="width:100%;padding:0.8rem 1rem;border-radius:10px;border:1px solid rgba(79,209,197,0.3);background:rgba(255,255,255,0.07);color:#fff;font-size:1rem;outline:none;">
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:0.4rem;font-size:0.9rem;color:#bdc3c7;">Password</label>
-                        <input type="password" placeholder="Enter your password" style="width:100%;padding:0.8rem 1rem;border-radius:10px;border:1px solid rgba(79,209,197,0.3);background:rgba(255,255,255,0.07);color:#fff;font-size:1rem;outline:none;">
-                    </div>
-                    <button style="width:100%;padding:0.9rem;border-radius:10px;background:linear-gradient(135deg,#4fd1c5,#38b2ac);color:#fff;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">Login →</button>
-                    <p style="text-align:center;font-size:0.85rem;color:#bdc3c7;">Don't have an account? <a href="#contact" style="color:#4fd1c5;text-decoration:none;">Contact Us</a></p>
+            <div class="login-page-wrap">
+
+                <!-- Page heading -->
+                <div class="login-page-title fade-in">
+                    <h2>Welcome to <span style="color:#4fd1c5;">LeoMox</span></h2>
+                    <p>Choose your login type to continue</p>
                 </div>
+
+                <!-- Two cards side by side -->
+                <div class="login-cards fade-in">
+
+                    <!-- Admin Login -->
+                    <div class="login-card" id="adminCard">
+                        <div class="login-card-icon">🛡️</div>
+                        <h3>Admin Login</h3>
+                        <p class="login-card-desc">Access the admin dashboard to manage users, services and configurations.</p>
+                        <div class="login-fields" id="adminFields" style="display:none;">
+                            <div class="login-field">
+                                <label>User ID</label>
+                                <input type="text" placeholder="Enter admin user ID" autocomplete="username">
+                            </div>
+                            <div class="login-field">
+                                <label>Password</label>
+                                <div class="password-wrap">
+                                    <input type="password" placeholder="Enter password" id="adminPass" autocomplete="current-password">
+                                    <button class="toggle-pass" onclick="togglePass('adminPass', this)">👁</button>
+                                </div>
+                            </div>
+                            <button class="login-btn admin-btn">Login as Admin →</button>
+                            <button class="login-back-btn" onclick="closeLoginCard('adminCard','adminFields')">← Back</button>
+                        </div>
+                        <button class="login-open-btn admin-open-btn" id="adminOpenBtn" onclick="openLoginCard('adminCard','adminFields','adminOpenBtn')">
+                            Admin Sign In →
+                        </button>
+                    </div>
+
+                    <!-- User Login -->
+                    <div class="login-card" id="userCard">
+                        <div class="login-card-icon">👤</div>
+                        <h3>User Login</h3>
+                        <p class="login-card-desc">Access your account to manage your SMS campaigns and communication services.</p>
+                        <div class="login-fields" id="userFields" style="display:none;">
+                            <div class="login-field">
+                                <label>User ID</label>
+                                <input type="text" placeholder="Enter your user ID" autocomplete="username">
+                            </div>
+                            <div class="login-field">
+                                <label>Password</label>
+                                <div class="password-wrap">
+                                    <input type="password" placeholder="Enter password" id="userPass" autocomplete="current-password">
+                                    <button class="toggle-pass" onclick="togglePass('userPass', this)">👁</button>
+                                </div>
+                            </div>
+                            <button class="login-btn user-btn">Login as User →</button>
+                            <button class="login-back-btn" onclick="closeLoginCard('userCard','userFields')">← Back</button>
+                        </div>
+                        <button class="login-open-btn user-open-btn" id="userOpenBtn" onclick="openLoginCard('userCard','userFields','userOpenBtn')">
+                            User Sign In →
+                        </button>
+                    </div>
+
+                </div>
+
+                <p class="login-footer-note">Need an account? <a href="#contact" style="color:#4fd1c5;text-decoration:none;">Contact Us</a></p>
             </div>
         </div>
     </section>
@@ -2266,25 +2496,34 @@ to { opacity: 1; transform: translateY(0); }
             this.reset();
         });
 
-        // ── Dropdown for touch devices ────────────────────────────────────
+        // ── Desktop Dropdown (click-to-open on all screen sizes) ──────────
         const dropdowns = document.querySelectorAll('.dropdown');
         dropdowns.forEach(dropdown => {
             const toggle = dropdown.querySelector('.dropdown-toggle');
             if (toggle) {
                 toggle.addEventListener('click', function(e) {
-                    if (window.innerWidth <= 768) {
-                        e.preventDefault();
-                        dropdowns.forEach(d => { if (d !== dropdown) d.classList.remove('active'); });
-                        dropdown.classList.toggle('active');
-                    }
+                    e.preventDefault();
+                    const isOpen = dropdown.classList.contains('active');
+                    // Close all dropdowns first
+                    dropdowns.forEach(d => d.classList.remove('active'));
+                    // Toggle this one
+                    if (!isOpen) dropdown.classList.add('active');
                 });
             }
         });
 
+        // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.dropdown')) {
                 dropdowns.forEach(d => d.classList.remove('active'));
             }
+        });
+
+        // Close dropdown when a sub-item is clicked
+        document.querySelectorAll('.dropdown-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                dropdowns.forEach(d => d.classList.remove('active'));
+            });
         });
 
         // ── Mobile Navigation ─────────────────────────────────────────────
@@ -2336,6 +2575,31 @@ to { opacity: 1; transform: translateY(0); }
                 showLoadingThen(() => showPage(targetId));
             });
         });
+        // ── Login Card Functions ──────────────────────────────────────────
+        function openLoginCard(cardId, fieldsId, btnId) {
+            document.getElementById(fieldsId).style.display = 'flex';
+            document.getElementById(btnId).style.display = 'none';
+        }
+        function closeLoginCard(cardId, fieldsId) {
+            document.getElementById(fieldsId).style.display = 'none';
+            // Show the open button again
+            const btn = document.querySelector('#' + cardId + ' .login-open-btn');
+            if (btn) btn.style.display = 'block';
+        }
+        function togglePass(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁';
+            }
+        }
+        window.openLoginCard = openLoginCard;
+        window.closeLoginCard = closeLoginCard;
+        window.togglePass = togglePass;
+
     </script>
 </body>
 </html>
