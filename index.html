@@ -1324,16 +1324,19 @@ to { opacity: 1; transform: translateY(0); }
 
         /* Mobile overlay panel */
         .mobile-nav-overlay {
-            display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.4);
-            z-index: 1050;
+            background: rgba(0,0,0,0.5);
+            z-index: 99998 !important;
             opacity: 0;
             transition: opacity 0.3s;
+            pointer-events: none;
+            visibility: hidden;
         }
         .mobile-nav-overlay.open {
-            opacity: 1;
+            opacity: 1 !important;
+            pointer-events: all;
+            visibility: visible;
         }
 
         .mobile-nav-panel {
@@ -1341,18 +1344,21 @@ to { opacity: 1; transform: translateY(0); }
             top: 0;
             right: 0;
             width: min(320px, 85vw);
-            height: 100vh;
+            height: 100%;
             background: #ffffff;
-            z-index: 1100;
-            transform: translateX(100%);
+            z-index: 99999 !important;
+            transform: translateX(110%);
             transition: transform 0.38s cubic-bezier(0.23,1,0.32,1);
             overflow-y: auto;
-            box-shadow: -8px 0 40px rgba(0,0,0,0.15);
-            display: flex;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: -8px 0 40px rgba(0,0,0,0.3);
+            display: flex !important;
             flex-direction: column;
+            visibility: hidden;
         }
         .mobile-nav-panel.open {
-            transform: translateX(0);
+            transform: translateX(0) !important;
+            visibility: visible !important;
         }
 
         .mobile-nav-header {
@@ -1454,9 +1460,8 @@ to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 900px) {
-            .hamburger { display: flex; }
+            .hamburger { display: flex !important; }
             .nav-links { display: none !important; }
-            .mobile-nav-overlay { display: block; }
             nav {
                 flex-direction: row !important;
                 gap: 0 !important;
@@ -1758,7 +1763,7 @@ to { opacity: 1; transform: translateY(0); }
     <div class="mobile-nav-panel" id="mobilePanel">
         <div class="mobile-nav-header">
             <a href="#home" class="logo mobile-logo-link" style="text-decoration:none;display:flex;align-items:center;gap:0.6rem;">
-                <img src="" alt="LeoMox" style="width:36px;height:36px;border-radius:8px;object-fit:cover;">
+                <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAyADUDASIAAhEBAxEB/8QAHAAAAgIDAQEAAAAAAAAAAAAAAAgFBgECAwQH/8QAMxAAAQMDAgQDBwIHAAAAAAAAAQIDBAAFBhEhBxIxUUGBsRMUMmFxg9IzhCIjJUJDlNH/xAAaAQACAwEBAAAAAAAAAAAAAAADBAABBQIG/8QAJREAAgIBBAAGAwAAAAAAAAAAAAECAxEEEiExBRMiMkFhcZHB/9oADAMBAAIRAxEAPwBt1HSqllfEbDcYle63m+x2JHi0kFxY+oSCR51I5zc3bRiN1ubA1djRXHEfUDakQeckz5r0yW6t6Q8srcWo6lRPU0euvd2KWWbRxE8auHKvhv5P7R78a6J4xcPldL6T+1d/GlDjMfKrAbHc4sJmbJt8lmM9+m6tshKvoaL5MRSeqkuhokcW8DUdr0f9Z38atOP3+036MZNpnsy2wdFch3T9R1HnSdxmOm1XrhPOlWrMreqOtSUPupZdSDspKjpv61UqVjgDDxCW9KS4GfCtqK5pO1FLGtkq/FXfh5fh3guelJXGY+VOtxOGuBXwd4TnpSeRWOm1M0dGfqp4Z9MtLNjwrBbBkKbIzdb3d/brbdlnmajBtYA5UdCrcHU9j3q+ZHlWTW/AsYudygsTGJyHffGZDA9msFRKBoPh/h6aeFRLl2g2PhZh0tePxrrNDckRnZQKmY/8wako6KJOmmvao2NxMyqSstXdcS6wl7LiSIyPZkdhoARp4Ve1y5wBnfGvjdjKXS/HZwzqz2ZNus9+s0JUBu5NrU5G5+ZKFJP9p7fKvLhDPLlFsOnSSj1FW7iN7lIxXGXYEBcFlSHSmOpRUEakbAnfTWoHDmdMitx06SEetdx9pl6mSjekvr+DDt9KKwjpRSZ6dMgeI6CrB70kDUmG5t5UpkZjptTozY7cmO4w6gKbcSUqB8Qa+C5HwlvcO4uKszbc2GpRLY9olK0DsQojXyo9MkuGZ2vrm8OKyQWH5ddbLDFtWhmfaySVQ5KOZG51OnY1ZGr7iMM++2fF9J69+WS5zssnulPj51HM8PMsR8VpI+83+Ve5jA8mT8VrI+6j8qL6H8mVKepSwov9ZwR90ulyvcpMi4yFOqSNEJ6JQOwHhUliTH9fgaD/ADo9a9sfCshTprbiPuo/7VywvEHoMpE648gcR+m0k66HuTUlOKQtXptRdcsxffbLugbUVukaCikz16Rk1yXRRURJGlYooqAmbdq6N0UVGdxOlFFFUEP/2Q==" alt="LeoMox" style="width:36px;height:36px;border-radius:8px;object-fit:cover;">
                 <div>
                     <div style="font-size:1.1rem;font-weight:700;"><span style="color:#4fd1c5;">Leo</span><span style="color:#2d3748;">Mox</span></div>
                     <div style="font-size:0.6rem;color:#718096;letter-spacing:0.5px;">IT SOLUTIONS</div>
@@ -1780,7 +1785,7 @@ to { opacity: 1; transform: translateY(0); }
                 </ul>
             </li>
             <li>
-                <button class="mobile-dropdown-toggle">Voice Solutions <span class="arrow">▼</span></button>
+                <button class="mobile-dropdown-toggle" data-hub="voice-solutions">Voice Solutions <span class="arrow">▼</span></button>
                 <ul class="mobile-submenu">
                     <li><a href="#obd-calls">OBD Calls</a></li>
                     <li><a href="#voice-calls">Voice Calls</a></li>
@@ -1788,7 +1793,7 @@ to { opacity: 1; transform: translateY(0); }
                 </ul>
             </li>
             <li>
-                <button class="mobile-dropdown-toggle">WhatsApp Solutions <span class="arrow">▼</span></button>
+                <button class="mobile-dropdown-toggle" data-hub="whatsapp-solutions">WhatsApp Solutions <span class="arrow">▼</span></button>
                 <ul class="mobile-submenu">
                     <li><a href="#promotional-whatsapp">Promotional WhatsApp</a></li>
                     <li><a href="#utility-whatsapp">Utility WhatsApp</a></li>
@@ -1870,12 +1875,12 @@ to { opacity: 1; transform: translateY(0); }
                     <h3>SMS Solutions</h3>
                     <p>Promotional, Transactional, OTP SMS and API integrations for all your messaging needs.</p>
                 </div>
-                <div class="service-card fade-in" onclick="showPage('obd-calls')" style="cursor:pointer;">
+                <div class="service-card fade-in" onclick="showPage('voice-solutions')" style="cursor:pointer;">
                     <div class="service-icon">📞</div>
                     <h3>Voice Solutions</h3>
                     <p>OBD Calls, Voice Calls and Conference services for seamless voice communication.</p>
                 </div>
-                <div class="service-card fade-in" onclick="showPage('promotional-whatsapp')" style="cursor:pointer;">
+                <div class="service-card fade-in" onclick="showPage('whatsapp-solutions')" style="cursor:pointer;">
                     <div class="service-icon">💬</div>
                     <h3>WhatsApp Solutions</h3>
                     <p>Promotional & Utility WhatsApp messaging plus intelligent Chatbot automation.</p>
@@ -1894,6 +1899,62 @@ to { opacity: 1; transform: translateY(0); }
                     <div class="service-icon">👨‍💻</div>
                     <h3>Developer APIs</h3>
                     <p>RESTful APIs, SDKs and sandbox environment for seamless integrations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SMS Solutions Sections -->
+
+    <!-- Voice Solutions Hub -->
+    <section id="voice-solutions" class="section features-section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Voice Solutions</h2>
+                <p>Powerful voice communication services to connect your business with customers</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card fade-in" onclick="showPage('obd-calls')" style="cursor:pointer;">
+                    <div class="service-icon">📲</div>
+                    <h3>OBD Calls</h3>
+                    <p>Outbound Dialing calls to reach your audience automatically with pre-recorded messages at scale.</p>
+                </div>
+                <div class="service-card fade-in" onclick="showPage('voice-calls')" style="cursor:pointer;">
+                    <div class="service-icon">📞</div>
+                    <h3>Voice Calls</h3>
+                    <p>High-quality voice call services for customer engagement, alerts and personalised communication.</p>
+                </div>
+                <div class="service-card fade-in" onclick="showPage('voice-conference')" style="cursor:pointer;">
+                    <div class="service-icon">🎙️</div>
+                    <h3>Voice Conference</h3>
+                    <p>Seamless multi-party conference calling to connect teams, clients and stakeholders effortlessly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Solutions Hub -->
+    <section id="whatsapp-solutions" class="section features-section">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>WhatsApp Solutions</h2>
+                <p>Reach your customers on the world's most popular messaging platform</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card fade-in" onclick="showPage('promotional-whatsapp')" style="cursor:pointer;">
+                    <div class="service-icon">📣</div>
+                    <h3>Promotional WhatsApp</h3>
+                    <p>Send bulk promotional messages, offers and announcements directly to customers on WhatsApp.</p>
+                </div>
+                <div class="service-card fade-in" onclick="showPage('utility-whatsapp')" style="cursor:pointer;">
+                    <div class="service-icon">⚙️</div>
+                    <h3>Utility WhatsApp</h3>
+                    <p>Transactional updates, order confirmations, reminders and alerts via WhatsApp Business API.</p>
+                </div>
+                <div class="service-card fade-in" onclick="showPage('chatbot')" style="cursor:pointer;">
+                    <div class="service-icon">🤖</div>
+                    <h3>Chatbot</h3>
+                    <p>Intelligent WhatsApp chatbots to automate customer support, lead generation and FAQs 24/7.</p>
                 </div>
             </div>
         </div>
@@ -2351,6 +2412,7 @@ to { opacity: 1; transform: translateY(0); }
                 <ul>
                     <li style="color: #bdc3c7;">Besides Modal Dairy Store,<br>RS Furniture Building,<br>Kolanukonda, Mangalagiri,<br>Guntur, Andhra Pradesh</li>
                     <li style="color: #bdc3c7; margin-top: 1rem;">📱 +91 95739 99700</li>
+                    <li style="margin-top: 0.5rem;"><a href="mailto:info@leomox.in" style="color:#4fd1c5;text-decoration:none;">✉️ info@leomox.in</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -2387,7 +2449,7 @@ to { opacity: 1; transform: translateY(0); }
 
         // ── SPA Page Routing ──────────────────────────────────────────────
         const ALL_SECTIONS = [
-            'home','about','services',
+            'home','about','services','voice-solutions','whatsapp-solutions',
             'promotional-sms','transactional-sms','otp-sms','api-solutions','short-url',
             'obd-calls','voice-calls','voice-conference',
             'promotional-whatsapp','utility-whatsapp','chatbot',
@@ -2553,12 +2615,19 @@ to { opacity: 1; transform: translateY(0); }
         // Mobile sub-dropdowns
         document.querySelectorAll('.mobile-dropdown-toggle').forEach(btn => {
             btn.addEventListener('click', () => {
+                const hub = btn.getAttribute('data-hub');
+                // If it has a hub page, navigate to it
+                if (hub) {
+                    closeMenu();
+                    showLoadingThen(() => showPage(hub));
+                    return;
+                }
                 const submenu = btn.nextElementSibling;
-                const isOpen = submenu.classList.contains('open');
+                const isOpen = submenu && submenu.classList.contains('open');
                 // Close all
                 document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('open'));
                 document.querySelectorAll('.mobile-dropdown-toggle').forEach(b => b.classList.remove('open'));
-                if (!isOpen) {
+                if (!isOpen && submenu) {
                     submenu.classList.add('open');
                     btn.classList.add('open');
                 }
