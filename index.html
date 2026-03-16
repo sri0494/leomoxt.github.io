@@ -1574,11 +1574,11 @@ to { opacity: 1; transform: translateY(0); }
             width: 100%;
             padding: 0.75rem 1rem;
             border-radius: 10px;
-            border: 1px solid rgba(79,209,197,0.3);
-            background: rgba(255,255,255,0.12);
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
-            caret-color: #4fd1c5;
+            border: 1px solid rgba(79,209,197,0.5);
+            background: #ffffff !important;
+            color: #1a1a1a !important;
+            -webkit-text-fill-color: #1a1a1a !important;
+            caret-color: #38b2ac;
             font-size: 0.95rem;
             outline: none;
             font-family: 'Outfit', sans-serif;
@@ -1587,9 +1587,9 @@ to { opacity: 1; transform: translateY(0); }
         .login-field input:-webkit-autofill,
         .login-field input:-webkit-autofill:hover,
         .login-field input:-webkit-autofill:focus {
-            -webkit-text-fill-color: #ffffff !important;
-            -webkit-box-shadow: 0 0 0 1000px rgba(15,61,62,0.95) inset !important;
-            caret-color: #4fd1c5;
+            -webkit-text-fill-color: #1a1a1a !important;
+            -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+            caret-color: #38b2ac;
         }
         .login-field input:focus {
             border-color: rgba(79,209,197,0.7);
@@ -1881,17 +1881,12 @@ to { opacity: 1; transform: translateY(0); }
             box-shadow: 0 4px 15px rgba(79,209,197,0.3);
         }
 
-        /* ── Global input text fix ── */
-        input, select, textarea {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
-            caret-color: #4fd1c5 !important;
-        }
-        input::placeholder { color: rgba(255,255,255,0.35) !important; -webkit-text-fill-color: rgba(255,255,255,0.35) !important; }
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:focus,
-        input:-webkit-autofill:active {
+        /* ── Global input text fix (HRMS forms only) ── */
+        .hrms-form-field input:-webkit-autofill,
+        .hrms-form-field input:-webkit-autofill:hover,
+        .hrms-form-field input:-webkit-autofill:focus,
+        .hrms-time-input:-webkit-autofill,
+        .hrms-inv-row input:-webkit-autofill {
             -webkit-text-fill-color: #ffffff !important;
             -webkit-box-shadow: 0 0 0 1000px rgba(15,61,62,0.98) inset !important;
             caret-color: #4fd1c5 !important;
@@ -2903,6 +2898,37 @@ to { opacity: 1; transform: translateY(0); }
             });
         });
         // ── HRMS Data Store ───────────────────────────────────────────────
+        // ── Default seed data ─────────────────────────────────────────────
+        const DEFAULT_USERS = [
+            { id:'admin',   password:'leomox@123', role:'admin',    name:'Super Admin',  active:true },
+            { id:'manager1',password:'mgr@123',    role:'manager',  name:'Ravi Kumar',   active:true },
+            { id:'hr1',     password:'hr@123',     role:'hr',       name:'Priya Sharma', active:true },
+            { id:'emp1',    password:'emp@123',    role:'employee', name:'Arjun Reddy',  active:true }
+        ];
+        const DEFAULT_EMPLOYEES = [
+            { id:'EMP001', name:'Ravi Kumar',   dept:'Sales',   designation:'Manager',    phone:'9876543210', email:'ravi@leomox.in',  salary:45000, joined:'2022-01-15', status:'Active' },
+            { id:'EMP002', name:'Priya Sharma', dept:'HR',      designation:'HR Lead',    phone:'9876543211', email:'priya@leomox.in', salary:38000, joined:'2022-03-10', status:'Active' },
+            { id:'EMP003', name:'Arjun Reddy',  dept:'Tech',    designation:'Developer',  phone:'9876543212', email:'arjun@leomox.in', salary:42000, joined:'2023-06-01', status:'Active' },
+            { id:'EMP004', name:'Sneha Patel',  dept:'Finance', designation:'Accountant', phone:'9876543213', email:'sneha@leomox.in', salary:35000, joined:'2023-08-15', status:'Active' }
+        ];
+        const DEFAULT_INVOICES = [
+            { id:'INV001', client:'TechCorp Pvt Ltd',   amount:15000, date:'2024-01-10', status:'Paid',    items:[{desc:'Bulk SMS - 50,000 msgs',qty:50000,rate:0.30}] },
+            { id:'INV002', client:'Retail Chain India', amount:8500,  date:'2024-02-05', status:'Pending', items:[{desc:'OTP SMS - 20,000 msgs',qty:20000,rate:0.35},{desc:'DLT Registration',qty:1,rate:3500}] },
+            { id:'INV003', client:'HealthPlus Clinic',  amount:12000, date:'2024-02-20', status:'Paid',    items:[{desc:'WhatsApp Business - 1 month',qty:1,rate:12000}] }
+        ];
+
+        // ── localStorage helpers ──────────────────────────────────────────
+        const LS = {
+            get(key, fallback) {
+                try { const v = localStorage.getItem('leomox_'+key); return v ? JSON.parse(v) : fallback; }
+                catch(e) { return fallback; }
+            },
+            set(key, val) {
+                try { localStorage.setItem('leomox_'+key, JSON.stringify(val)); } catch(e) {}
+            }
+        };
+
+        // ── HRMS data — loads from localStorage, falls back to defaults ───
         const HRMS = {
             currentUser: null,
             activeModule: 'dashboard',
@@ -2914,26 +2940,20 @@ to { opacity: 1; transform: translateY(0); }
                 employee:{ label:'Employee',color:'#2b6cb0', permissions:['dashboard','attendance'] }
             },
 
-            users: [
-                { id:'admin',   password:'leomox@123', role:'admin',    name:'Super Admin',   active:true  },
-                { id:'manager1',password:'mgr@123',    role:'manager',  name:'Ravi Kumar',    active:true  },
-                { id:'hr1',     password:'hr@123',     role:'hr',       name:'Priya Sharma',  active:true  },
-                { id:'emp1',    password:'emp@123',    role:'employee', name:'Arjun Reddy',   active:true  }
-            ],
-
-            employees: [
-                { id:'EMP001', name:'Ravi Kumar',   dept:'Sales',   designation:'Manager',   phone:'9876543210', email:'ravi@leomox.in',  salary:45000, joined:'2022-01-15', status:'Active' },
-                { id:'EMP002', name:'Priya Sharma', dept:'HR',      designation:'HR Lead',   phone:'9876543211', email:'priya@leomox.in', salary:38000, joined:'2022-03-10', status:'Active' },
-                { id:'EMP003', name:'Arjun Reddy',  dept:'Tech',    designation:'Developer', phone:'9876543212', email:'arjun@leomox.in', salary:42000, joined:'2023-06-01', status:'Active' },
-                { id:'EMP004', name:'Sneha Patel',  dept:'Finance', designation:'Accountant',phone:'9876543213', email:'sneha@leomox.in', salary:35000, joined:'2023-08-15', status:'Active' }
-            ],
-
-            invoices: [
-                { id:'INV001', client:'TechCorp Pvt Ltd',   amount:15000, date:'2024-01-10', status:'Paid',    items:[{desc:'Bulk SMS - 50,000 msgs',qty:50000,rate:0.30}] },
-                { id:'INV002', client:'Retail Chain India', amount:8500,  date:'2024-02-05', status:'Pending', items:[{desc:'OTP SMS - 20,000 msgs',qty:20000,rate:0.35},{desc:'DLT Registration',qty:1,rate:3500}] },
-                { id:'INV003', client:'HealthPlus Clinic',  amount:12000, date:'2024-02-20', status:'Paid',    items:[{desc:'WhatsApp Business - 1 month',qty:1,rate:12000}] }
-            ]
+            get users()     { return LS.get('users',     DEFAULT_USERS);     },
+            set users(v)    { LS.set('users', v);     },
+            get employees() { return LS.get('employees', DEFAULT_EMPLOYEES); },
+            set employees(v){ LS.set('employees', v); },
+            get invoices()  { return LS.get('invoices',  DEFAULT_INVOICES);  },
+            set invoices(v) { LS.set('invoices', v);  }
         };
+
+        // ── Save helper — call after any mutation ─────────────────────────
+        function saveHRMS() {
+            LS.set('users',     HRMS.users);
+            LS.set('employees', HRMS.employees);
+            LS.set('invoices',  HRMS.invoices);
+        }
 
         // ── Login Card Functions ──────────────────────────────────────────
         function openLoginCard(cardId, fieldsId, btnId) {
@@ -2993,6 +3013,17 @@ to { opacity: 1; transform: translateY(0); }
         window.adminLogin = adminLogin;
         window.userLogin  = userLogin;
         window.hrmsLogout = hrmsLogout;
+
+        // ── Reset Data ────────────────────────────────────────────────────
+        function resetHRMSData() {
+            if (!confirm('This will delete ALL custom data and reset to defaults. Are you sure?')) return;
+            localStorage.removeItem('leomox_users');
+            localStorage.removeItem('leomox_employees');
+            localStorage.removeItem('leomox_invoices');
+            alert('Data reset to defaults. The page will reload.');
+            location.reload();
+        }
+        window.resetHRMSData = resetHRMSData;
 
         // ── Permission Check ──────────────────────────────────────────────
         function can(module) {
@@ -3158,25 +3189,30 @@ to { opacity: 1; transform: translateY(0); }
             const name = document.getElementById('ef_name').value.trim();
             if (!name) { alert('Name is required'); return; }
             if (id) {
-                const e = HRMS.employees.find(x=>x.id===id);
+                const empArr = HRMS.employees;
+                const e = empArr.find(x=>x.id===id);
                 e.name=name; e.dept=document.getElementById('ef_dept').value; e.designation=document.getElementById('ef_desig').value;
                 e.phone=document.getElementById('ef_phone').value; e.email=document.getElementById('ef_email').value;
                 e.salary=parseInt(document.getElementById('ef_salary').value)||0; e.joined=document.getElementById('ef_joined').value;
                 e.status=document.getElementById('ef_status').value;
+                HRMS.employees = empArr;
             } else {
                 const newId = 'EMP' + String(HRMS.employees.length+1).padStart(3,'0');
-                HRMS.employees.push({ id:newId, name, dept:document.getElementById('ef_dept').value, designation:document.getElementById('ef_desig').value,
+                const empList = HRMS.employees;
+                empList.push({ id:newId, name, dept:document.getElementById('ef_dept').value, designation:document.getElementById('ef_desig').value,
                     phone:document.getElementById('ef_phone').value, email:document.getElementById('ef_email').value,
                     salary:parseInt(document.getElementById('ef_salary').value)||0, joined:document.getElementById('ef_joined').value,
                     status:document.getElementById('ef_status').value||'Active' });
+                HRMS.employees = empList;
             }
+            saveHRMS();
             hrmsRenderModule('employees');
         }
 
         function editEmployee(id) { showAddEmployee(id); }
         function deleteEmployee(id) {
             if (!confirm('Delete this employee?')) return;
-            HRMS.employees = HRMS.employees.filter(e=>e.id!==id);
+            HRMS.employees = HRMS.employees.filter(e=>e.id!==id); saveHRMS();
             hrmsRenderModule('employees');
         }
         window.showAddEmployee=showAddEmployee; window.saveEmployee=saveEmployee; window.editEmployee=editEmployee; window.deleteEmployee=deleteEmployee;
@@ -3250,28 +3286,31 @@ to { opacity: 1; transform: translateY(0); }
             const role = document.getElementById('uf_role').value;
             if (!uid||!name) { alert('User ID and Name are required'); return; }
             if (id) {
-                const u = HRMS.users.find(x=>x.id===id);
+                const uArr2 = HRMS.users;
+                const u = uArr2.find(x=>x.id===id);
                 u.name=name; u.role=role;
                 if (pwd) u.password=pwd;
+                HRMS.users = uArr2;
             } else {
                 if (!pwd) { alert('Password is required for new users'); return; }
                 if (HRMS.users.find(x=>x.id===uid)) { alert('User ID already exists'); return; }
-                HRMS.users.push({ id:uid, password:pwd, role, name, active:true });
+                const uList = HRMS.users; uList.push({ id:uid, password:pwd, role, name, active:true }); HRMS.users = uList;
             }
+            saveHRMS();
             hrmsRenderModule('users');
         }
 
         function toggleUser(id) {
             if (id==='admin') { alert('Cannot disable super admin'); return; }
             const u = HRMS.users.find(x=>x.id===id);
-            u.active = !u.active;
+            u.active = !u.active; const uArr = HRMS.users; HRMS.users = uArr; saveHRMS();
             hrmsRenderModule('users');
         }
         function editUser(id) { showAddUser(id); }
         function deleteUser(id) {
             if (id==='admin') return;
             if (!confirm('Delete this user?')) return;
-            HRMS.users = HRMS.users.filter(u=>u.id!==id);
+            HRMS.users = HRMS.users.filter(u=>u.id!==id); saveHRMS();
             hrmsRenderModule('users');
         }
         window.showAddUser=showAddUser; window.saveUser=saveUser; window.toggleUser=toggleUser; window.editUser=editUser; window.deleteUser=deleteUser;
@@ -3417,14 +3456,15 @@ to { opacity: 1; transform: translateY(0); }
                 if (d.value.trim()) { items.push({desc:d.value,qty:q,rate:r}); total+=q*r; }
             }
             const newId = 'INV' + String(HRMS.invoices.length+1).padStart(3,'0');
-            HRMS.invoices.unshift({ id:newId, client, amount:total, date, status:'Pending', items });
+            const invList = HRMS.invoices; invList.unshift({ id:newId, client, amount:total, date, status:'Pending', items }); HRMS.invoices = invList;
+            saveHRMS();
             invItemCount = 1;
             hrmsRenderModule('invoice');
         }
 
         function toggleInvStatus(id) {
             const inv = HRMS.invoices.find(i=>i.id===id);
-            inv.status = inv.status==='Paid'?'Pending':'Paid';
+            const invArr = HRMS.invoices; const inv2 = invArr.find(i=>i.id===id); inv2.status = inv2.status==='Paid'?'Pending':'Paid'; HRMS.invoices = invArr; saveHRMS();
             hrmsRenderModule('invoice');
         }
 
@@ -3454,6 +3494,11 @@ to { opacity: 1; transform: translateY(0); }
                     <div class="hrms-form-field"><label>Address</label><input value="Kolanukonda, Mangalagiri, Guntur, AP"></div>
                 </div>
                 <button class="hrms-btn-primary" style="margin-top:1rem;" onclick="alert('Settings saved!')">💾 Save Settings</button>
+            </div>
+            <div class="hrms-card" style="margin-top:1.2rem;border-color:rgba(252,129,129,0.25);">
+                <h4 style="color:#fc8181;">⚠️ Data Management</h4>
+                <p style="color:#9aa5b4;font-size:0.88rem;margin-bottom:1rem;">Clear all stored data and reset to factory defaults. This cannot be undone.</p>
+                <button class="hrms-btn-sm danger" onclick="resetHRMSData()">🗑️ Reset All Data to Defaults</button>
             </div>`;
         }
     </script>
