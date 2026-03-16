@@ -1575,12 +1575,21 @@ to { opacity: 1; transform: translateY(0); }
             padding: 0.75rem 1rem;
             border-radius: 10px;
             border: 1px solid rgba(79,209,197,0.3);
-            background: rgba(255,255,255,0.07);
-            color: #fff;
+            background: rgba(255,255,255,0.12);
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            caret-color: #4fd1c5;
             font-size: 0.95rem;
             outline: none;
             font-family: 'Outfit', sans-serif;
             transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .login-field input:-webkit-autofill,
+        .login-field input:-webkit-autofill:hover,
+        .login-field input:-webkit-autofill:focus {
+            -webkit-text-fill-color: #ffffff !important;
+            -webkit-box-shadow: 0 0 0 1000px rgba(15,61,62,0.95) inset !important;
+            caret-color: #4fd1c5;
         }
         .login-field input:focus {
             border-color: rgba(79,209,197,0.7);
@@ -1645,6 +1654,247 @@ to { opacity: 1; transform: translateY(0); }
             color: #9aa5b4;
             font-size: 0.9rem;
             margin-top: 1rem;
+        }
+
+
+        /* ── HRMS Shell ── */
+        .hrms-shell { display:flex; min-height:calc(100vh - 6rem); gap:0; border-radius:16px; overflow:hidden; border:1px solid rgba(79,209,197,0.15); }
+        .hrms-sidebar { width:230px; min-width:230px; background:rgba(10,30,30,0.95); display:flex; flex-direction:column; padding:1.2rem 0; border-right:1px solid rgba(79,209,197,0.12); transition:transform 0.3s; }
+        .hrms-sidebar-logo { display:flex; align-items:center; gap:0.7rem; padding:0 1.2rem 1rem; border-bottom:1px solid rgba(79,209,197,0.1); margin-bottom:0.5rem; }
+        .hrms-nav { display:flex; flex-direction:column; gap:2px; padding:0 0.6rem; flex:1; }
+        .hrms-nav-btn { display:flex; align-items:center; gap:0.6rem; padding:0.7rem 0.9rem; border:none; background:transparent; color:#9aa5b4; font-family:'Outfit',sans-serif; font-size:0.9rem; font-weight:500; cursor:pointer; border-radius:10px; transition:all 0.2s; text-align:left; width:100%; }
+        .hrms-nav-btn:hover { background:rgba(79,209,197,0.1); color:#fff; }
+        .hrms-nav-btn.active { background:linear-gradient(135deg,rgba(79,209,197,0.2),rgba(56,178,172,0.1)); color:#4fd1c5; border-left:3px solid #4fd1c5; }
+        .hrms-sidebar-user { display:flex; align-items:center; gap:0.7rem; padding:1rem 1.2rem; border-top:1px solid rgba(79,209,197,0.1); margin-top:auto; }
+        .hrms-user-avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#4fd1c5,#38b2ac); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem; color:#fff; flex-shrink:0; }
+        .hrms-main { flex:1; display:flex; flex-direction:column; min-width:0; }
+        .hrms-header { display:flex; align-items:center; gap:1rem; padding:1rem 1.5rem; border-bottom:1px solid rgba(79,209,197,0.1); background:rgba(255,255,255,0.02); }
+        .hrms-page-title { flex:1; font-size:1.2rem; font-weight:700; color:#fff; margin:0; }
+        .hrms-menu-toggle { display:none; background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; }
+        .hrms-content { padding:1.5rem; flex:1; overflow-y:auto; }
+
+        /* Cards & Tables */
+        .hrms-card { background:rgba(255,255,255,0.05); border:1px solid rgba(79,209,197,0.15); border-radius:14px; padding:1.4rem; margin-bottom:1.2rem; }
+        .hrms-card h4 { color:#4fd1c5; font-size:1rem; font-weight:700; margin:0 0 1rem; }
+        .hrms-toolbar { display:flex; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; align-items:center; }
+        .hrms-table-wrap { overflow-x:auto; border-radius:12px; border:1px solid rgba(79,209,197,0.12); }
+        .hrms-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+        .hrms-table th { background:rgba(79,209,197,0.08); color:#4fd1c5; font-weight:600; padding:0.75rem 1rem; text-align:left; white-space:nowrap; }
+        .hrms-table td { padding:0.7rem 1rem; color:#e2e8f0; border-bottom:1px solid rgba(255,255,255,0.05); vertical-align:middle; }
+        .hrms-table tr:hover td { background:rgba(79,209,197,0.04); }
+
+        /* Buttons */
+        .hrms-btn-primary { background:linear-gradient(135deg,#4fd1c5,#38b2ac); color:#fff; border:none; padding:0.6rem 1.2rem; border-radius:9px; cursor:pointer; font-family:'Outfit',sans-serif; font-weight:600; font-size:0.88rem; transition:transform 0.2s,box-shadow 0.2s; }
+        .hrms-btn-primary:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(79,209,197,0.3); }
+        .hrms-btn-secondary { background:rgba(255,255,255,0.08); color:#bdc3c7; border:1px solid rgba(255,255,255,0.15); padding:0.6rem 1.2rem; border-radius:9px; cursor:pointer; font-family:'Outfit',sans-serif; font-weight:500; font-size:0.88rem; }
+        .hrms-btn-sm { background:rgba(79,209,197,0.12); color:#4fd1c5; border:1px solid rgba(79,209,197,0.25); padding:0.3rem 0.65rem; border-radius:7px; cursor:pointer; font-size:0.8rem; transition:background 0.2s; }
+        .hrms-btn-sm:hover { background:rgba(79,209,197,0.25); }
+        .hrms-btn-sm.danger { background:rgba(252,129,129,0.12); color:#fc8181; border-color:rgba(252,129,129,0.25); }
+        .hrms-btn-sm.danger:hover { background:rgba(252,129,129,0.25); }
+
+        /* Badges */
+        .hrms-badge { padding:3px 10px; border-radius:99px; font-size:0.75rem; font-weight:600; background:rgba(255,255,255,0.1); color:#bdc3c7; }
+        .hrms-badge.paid { background:rgba(72,187,120,0.2); color:#48bb78; }
+        .hrms-badge.pending { background:rgba(252,129,129,0.2); color:#fc8181; }
+        .hrms-role-badge { padding:3px 10px; border-radius:99px; font-size:0.78rem; font-weight:600; }
+        .hrms-perm-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
+        .hrms-perm-tag { background:rgba(79,209,197,0.1); color:#4fd1c5; font-size:0.72rem; padding:2px 8px; border-radius:99px; }
+        .hrms-avatar { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#4fd1c5,#38b2ac); display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; color:#fff; margin-right:6px; vertical-align:middle; }
+        .hrms-avatar.sm { width:24px; height:24px; font-size:0.7rem; }
+
+        /* Dashboard */
+        .hrms-dash-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
+        .hds-card { background:rgba(255,255,255,0.05); border:1px solid rgba(79,209,197,0.15); border-radius:14px; padding:1.2rem; text-align:center; transition:transform 0.2s,border-color 0.2s; }
+        .hds-card:hover { transform:translateY(-3px); border-color:rgba(79,209,197,0.4); }
+        .hds-icon { font-size:1.8rem; margin-bottom:0.4rem; }
+        .hds-num { font-size:1.8rem; font-weight:800; color:#4fd1c5; }
+        .hds-label { font-size:0.78rem; color:#9aa5b4; margin-top:2px; }
+        .hrms-dash-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+        .hrms-list-row { display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+        .hrms-list-row b { color:#e2e8f0; font-size:0.9rem; }
+        .hrms-list-row small { color:#718096; font-size:0.78rem; }
+
+        /* Forms */
+        .hrms-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+        .hrms-form-field label { display:block; font-size:0.82rem; color:#bdc3c7; margin-bottom:0.3rem; font-weight:500; }
+        .hrms-form-field input, .hrms-form-field select { width:100%; padding:0.65rem 0.9rem; border-radius:9px; border:1px solid rgba(79,209,197,0.25); background:rgba(255,255,255,0.07); color:#fff !important; -webkit-text-fill-color:#fff !important; font-family:'Outfit',sans-serif; font-size:0.9rem; outline:none; }
+        .hrms-form-field input:focus, .hrms-form-field select:focus { border-color:rgba(79,209,197,0.6); box-shadow:0 0 0 3px rgba(79,209,197,0.1); }
+        .hrms-form-field select option { background:#1a3d3d; color:#fff; }
+        .hrms-select-inline { background:rgba(255,255,255,0.07); color:#fff; border:1px solid rgba(79,209,197,0.2); border-radius:7px; padding:4px 8px; font-family:'Outfit',sans-serif; font-size:0.82rem; }
+        .hrms-time-input { background:rgba(255,255,255,0.07); color:#fff !important; -webkit-text-fill-color:#fff !important; border:1px solid rgba(79,209,197,0.2); border-radius:7px; padding:4px 8px; font-size:0.82rem; width:90px; }
+        .hrms-inv-row { display:flex; gap:0.5rem; margin-bottom:0.5rem; }
+        .hrms-inv-row input { padding:0.6rem 0.8rem; border-radius:9px; border:1px solid rgba(79,209,197,0.25); background:rgba(255,255,255,0.07); color:#fff !important; -webkit-text-fill-color:#fff !important; font-family:'Outfit',sans-serif; font-size:0.88rem; outline:none; }
+
+        /* Role grid */
+        .hrms-role-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:0.5rem; }
+        .hrms-role-card { border:1px solid; border-radius:12px; padding:1rem; background:rgba(255,255,255,0.03); }
+        .hrms-role-title { font-weight:700; font-size:0.95rem; margin-bottom:0.5rem; }
+
+        /* Mobile HRMS */
+        @media (max-width:768px) {
+            .hrms-shell { flex-direction:column; }
+            .hrms-sidebar { position:fixed; top:0; left:0; height:100%; z-index:9000; transform:translateX(-100%); width:250px; }
+            .hrms-sidebar.open { transform:translateX(0); }
+            .hrms-menu-toggle { display:block !important; }
+            .hrms-dash-stats { grid-template-columns:repeat(2,1fr); }
+            .hrms-dash-grid { grid-template-columns:1fr; }
+            .hrms-form-grid { grid-template-columns:1fr; }
+            .hrms-role-grid { grid-template-columns:repeat(2,1fr); }
+            .hrms-logout-btn { display:none; }
+        }
+        @media (max-width:480px) {
+            .hrms-dash-stats { grid-template-columns:1fr 1fr; }
+            .hrms-role-grid { grid-template-columns:1fr; }
+        }
+
+        #hrms { padding-top: 7rem; }
+        .hrms-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(79,209,197,0.2);
+            border-radius: 16px;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .hrms-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            font-size: 1.6rem;
+        }
+        .hrms-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+        }
+        .hrms-subtitle {
+            font-size: 0.72rem;
+            color: #bdc3c7;
+            letter-spacing: 0.5px;
+            margin-top: 3px;
+        }
+        .hrms-logout-btn {
+            background: rgba(255,80,80,0.12);
+            border: 1px solid rgba(255,80,80,0.3);
+            color: #fc8181;
+            padding: 0.55rem 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .hrms-logout-btn:hover {
+            background: rgba(255,80,80,0.22);
+            transform: translateY(-1px);
+        }
+        .hrms-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 768px) { .hrms-stats { grid-template-columns: repeat(2,1fr); } }
+        @media (max-width: 400px) { .hrms-stats { grid-template-columns: 1fr; } }
+        .hrms-stat-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(79,209,197,0.15);
+            border-radius: 14px;
+            padding: 1.4rem 1rem;
+            text-align: center;
+            transition: transform 0.25s, border-color 0.25s;
+        }
+        .hrms-stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(79,209,197,0.45);
+        }
+        .hrms-stat-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .hrms-stat-num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #4fd1c5;
+            line-height: 1;
+        }
+        .hrms-stat-label {
+            font-size: 0.8rem;
+            color: #9aa5b4;
+            margin-top: 0.3rem;
+        }
+        .hrms-modules {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+        }
+        @media (max-width: 900px) { .hrms-modules { grid-template-columns: repeat(2,1fr); } }
+        @media (max-width: 500px) { .hrms-modules { grid-template-columns: 1fr; } }
+        .hrms-module-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(79,209,197,0.15);
+            border-radius: 16px;
+            padding: 1.6rem 1.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+        }
+        .hrms-module-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(79,209,197,0.5);
+            box-shadow: 0 12px 35px rgba(79,209,197,0.12);
+        }
+        .hrms-module-icon { font-size: 2rem; }
+        .hrms-module-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+        .hrms-module-card p {
+            font-size: 0.88rem;
+            color: #9aa5b4;
+            line-height: 1.5;
+            margin: 0;
+            flex: 1;
+        }
+        .hrms-module-btn {
+            margin-top: 0.5rem;
+            padding: 0.6rem 1rem;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #4fd1c5, #38b2ac);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: none;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+        }
+        .hrms-module-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(79,209,197,0.3);
+        }
+
+        /* ── Global input text fix ── */
+        input, select, textarea {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            caret-color: #4fd1c5 !important;
+        }
+        input::placeholder { color: rgba(255,255,255,0.35) !important; -webkit-text-fill-color: rgba(255,255,255,0.35) !important; }
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-text-fill-color: #ffffff !important;
+            -webkit-box-shadow: 0 0 0 1000px rgba(15,61,62,0.98) inset !important;
+            caret-color: #4fd1c5 !important;
         }
 
     </style>
@@ -2333,7 +2583,7 @@ to { opacity: 1; transform: translateY(0); }
                                     <button class="toggle-pass" onclick="togglePass('adminPass', this)">👁</button>
                                 </div>
                             </div>
-                            <button class="login-btn admin-btn">Login as Admin →</button>
+                            <button class="login-btn admin-btn" onclick="adminLogin()">Login as Admin →</button>
                             <button class="login-back-btn" onclick="closeLoginCard('adminCard','adminFields')">← Back</button>
                         </div>
                         <button class="login-open-btn admin-open-btn" id="adminOpenBtn" onclick="openLoginCard('adminCard','adminFields','adminOpenBtn')">
@@ -2358,7 +2608,7 @@ to { opacity: 1; transform: translateY(0); }
                                     <button class="toggle-pass" onclick="togglePass('userPass', this)">👁</button>
                                 </div>
                             </div>
-                            <button class="login-btn user-btn">Login as User →</button>
+                            <button class="login-btn user-btn" onclick="userLogin()">Login as User →</button>
                             <button class="login-back-btn" onclick="closeLoginCard('userCard','userFields')">← Back</button>
                         </div>
                         <button class="login-open-btn user-open-btn" id="userOpenBtn" onclick="openLoginCard('userCard','userFields','userOpenBtn')">
@@ -2370,6 +2620,14 @@ to { opacity: 1; transform: translateY(0); }
 
                 <p class="login-footer-note">Need an account? <a href="#contact" style="color:#4fd1c5;text-decoration:none;">Contact Us</a></p>
             </div>
+        </div>
+    </section>
+
+    
+    <!-- HRMS Portal Section -->
+    <section id="hrms" class="section" style="padding-top:6rem;min-height:100vh;">
+        <div class="container" id="hrmsApp">
+            <!-- Rendered by JS -->
         </div>
     </section>
 
@@ -2412,7 +2670,7 @@ to { opacity: 1; transform: translateY(0); }
                 <ul>
                     <li style="color: #bdc3c7;">Besides Modal Dairy Store,<br>RS Furniture Building,<br>Kolanukonda, Mangalagiri,<br>Guntur, Andhra Pradesh</li>
                     <li style="color: #bdc3c7; margin-top: 1rem;">📱 +91 95739 99700</li>
-                    <li style="margin-top: 0.5rem;"><a href="mailto:info@leomox.in" style="color:#4fd1c5;text-decoration:none;">✉️ info@leomox.in</a></li>
+                    <li style="margin-top: 0.5rem;"><a href="/cdn-cgi/l/email-protection#3e575058517e525b51535146105750" style="color:#4fd1c5;text-decoration:none;">✉️ <span class="__cf_email__" data-cfemail="462f282029062a23292b293e682f28">[email&#160;protected]</span></a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -2428,7 +2686,7 @@ to { opacity: 1; transform: translateY(0); }
         </div>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // ── Loading Overlay ───────────────────────────────────────────────
         const loadingOverlay = document.getElementById('loading-overlay');
 
@@ -2453,7 +2711,7 @@ to { opacity: 1; transform: translateY(0); }
             'promotional-sms','transactional-sms','otp-sms','api-solutions','short-url',
             'obd-calls','voice-calls','voice-conference',
             'promotional-whatsapp','utility-whatsapp','chatbot',
-            'rcs','dlt','developers','features','login'
+            'rcs','dlt','developers','features','login','hrms'
         ];
 
         // Add spa-section class to all sections
@@ -2644,6 +2902,39 @@ to { opacity: 1; transform: translateY(0); }
                 showLoadingThen(() => showPage(targetId));
             });
         });
+        // ── HRMS Data Store ───────────────────────────────────────────────
+        const HRMS = {
+            currentUser: null,
+            activeModule: 'dashboard',
+
+            roles: {
+                admin:   { label:'Admin',   color:'#e53e3e', permissions:['dashboard','employees','users','attendance','payroll','invoice','settings'] },
+                manager: { label:'Manager', color:'#dd6b20', permissions:['dashboard','employees','attendance','invoice'] },
+                hr:      { label:'HR',      color:'#6b46c1', permissions:['dashboard','employees','attendance'] },
+                employee:{ label:'Employee',color:'#2b6cb0', permissions:['dashboard','attendance'] }
+            },
+
+            users: [
+                { id:'admin',   password:'leomox@123', role:'admin',    name:'Super Admin',   active:true  },
+                { id:'manager1',password:'mgr@123',    role:'manager',  name:'Ravi Kumar',    active:true  },
+                { id:'hr1',     password:'hr@123',     role:'hr',       name:'Priya Sharma',  active:true  },
+                { id:'emp1',    password:'emp@123',    role:'employee', name:'Arjun Reddy',   active:true  }
+            ],
+
+            employees: [
+                { id:'EMP001', name:'Ravi Kumar',   dept:'Sales',   designation:'Manager',   phone:'9876543210', email:'ravi@leomox.in',  salary:45000, joined:'2022-01-15', status:'Active' },
+                { id:'EMP002', name:'Priya Sharma', dept:'HR',      designation:'HR Lead',   phone:'9876543211', email:'priya@leomox.in', salary:38000, joined:'2022-03-10', status:'Active' },
+                { id:'EMP003', name:'Arjun Reddy',  dept:'Tech',    designation:'Developer', phone:'9876543212', email:'arjun@leomox.in', salary:42000, joined:'2023-06-01', status:'Active' },
+                { id:'EMP004', name:'Sneha Patel',  dept:'Finance', designation:'Accountant',phone:'9876543213', email:'sneha@leomox.in', salary:35000, joined:'2023-08-15', status:'Active' }
+            ],
+
+            invoices: [
+                { id:'INV001', client:'TechCorp Pvt Ltd',   amount:15000, date:'2024-01-10', status:'Paid',    items:[{desc:'Bulk SMS - 50,000 msgs',qty:50000,rate:0.30}] },
+                { id:'INV002', client:'Retail Chain India', amount:8500,  date:'2024-02-05', status:'Pending', items:[{desc:'OTP SMS - 20,000 msgs',qty:20000,rate:0.35},{desc:'DLT Registration',qty:1,rate:3500}] },
+                { id:'INV003', client:'HealthPlus Clinic',  amount:12000, date:'2024-02-20', status:'Paid',    items:[{desc:'WhatsApp Business - 1 month',qty:1,rate:12000}] }
+            ]
+        };
+
         // ── Login Card Functions ──────────────────────────────────────────
         function openLoginCard(cardId, fieldsId, btnId) {
             document.getElementById(fieldsId).style.display = 'flex';
@@ -2651,24 +2942,520 @@ to { opacity: 1; transform: translateY(0); }
         }
         function closeLoginCard(cardId, fieldsId) {
             document.getElementById(fieldsId).style.display = 'none';
-            // Show the open button again
             const btn = document.querySelector('#' + cardId + ' .login-open-btn');
             if (btn) btn.style.display = 'block';
         }
         function togglePass(inputId, btn) {
             const input = document.getElementById(inputId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                btn.textContent = '🙈';
-            } else {
-                input.type = 'password';
-                btn.textContent = '👁';
-            }
+            if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+            else { input.type = 'password'; btn.textContent = '👁'; }
         }
         window.openLoginCard = openLoginCard;
         window.closeLoginCard = closeLoginCard;
         window.togglePass = togglePass;
 
+        // ── Auth ──────────────────────────────────────────────────────────
+        function adminLogin() {
+            const uid = document.querySelector('#adminFields input[type="text"]').value.trim();
+            const pwd = document.getElementById('adminPass').value.trim();
+            if (!uid || !pwd) { alert('Please enter User ID and Password.'); return; }
+            const user = HRMS.users.find(u => u.id === uid && u.password === pwd);
+            if (!user) { alert('Invalid credentials. Please try again.'); return; }
+            if (!user.active) { alert('This account has been disabled. Contact admin.'); return; }
+            HRMS.currentUser = user;
+            HRMS.activeModule = 'dashboard';
+            closeLoginCard('adminCard','adminFields');
+            document.querySelector('#adminFields input[type="text"]').value = '';
+            document.getElementById('adminPass').value = '';
+            showLoadingThen(() => { showPage('hrms'); renderHRMS(); });
+        }
+
+        function userLogin() {
+            const uid = document.querySelector('#userFields input[type="text"]').value.trim();
+            const pwd = document.getElementById('userPass').value.trim();
+            if (!uid || !pwd) { alert('Please enter User ID and Password.'); return; }
+            const user = HRMS.users.find(u => u.id === uid && u.password === pwd);
+            if (!user) { alert('Invalid credentials. Please try again.'); return; }
+            if (!user.active) { alert('This account has been disabled.'); return; }
+            HRMS.currentUser = user;
+            HRMS.activeModule = 'dashboard';
+            closeLoginCard('userCard','userFields');
+            document.querySelector('#userFields input[type="text"]').value = '';
+            document.getElementById('userPass').value = '';
+            showLoadingThen(() => { showPage('hrms'); renderHRMS(); });
+        }
+
+        function hrmsLogout() {
+            HRMS.currentUser = null;
+            showLoadingThen(() => showPage('login'));
+        }
+
+        window.adminLogin = adminLogin;
+        window.userLogin  = userLogin;
+        window.hrmsLogout = hrmsLogout;
+
+        // ── Permission Check ──────────────────────────────────────────────
+        function can(module) {
+            if (!HRMS.currentUser) return false;
+            return HRMS.roles[HRMS.currentUser.role].permissions.includes(module);
+        }
+
+        // ── HRMS Renderer ─────────────────────────────────────────────────
+        function renderHRMS() {
+            const app = document.getElementById('hrmsApp');
+            if (!app) return;
+            const u = HRMS.currentUser;
+            if (!u) { showPage('login'); return; }
+            const role = HRMS.roles[u.role];
+            const perms = role.permissions;
+
+            const navItems = [
+                { id:'dashboard',  icon:'📊', label:'Dashboard'  },
+                { id:'employees',  icon:'👥', label:'Employees'  },
+                { id:'users',      icon:'🔑', label:'Users'      },
+                { id:'attendance', icon:'📅', label:'Attendance' },
+                { id:'payroll',    icon:'💰', label:'Payroll'    },
+                { id:'invoice',    icon:'🧾', label:'Invoices'   },
+                { id:'settings',   icon:'⚙️', label:'Settings'   }
+            ].filter(n => perms.includes(n.id));
+
+            const navHTML = navItems.map(n => `
+                <button class="hrms-nav-btn ${HRMS.activeModule===n.id?'active':''}" onclick="hrmsNav('${n.id}')">
+                    <span>${n.icon}</span><span>${n.label}</span>
+                </button>`).join('');
+
+            app.innerHTML = `
+            <div class="hrms-shell">
+                <!-- Sidebar -->
+                <div class="hrms-sidebar" id="hrmsSidebar">
+                    <div class="hrms-sidebar-logo">
+                        <span style="font-size:1.6rem;">🏢</span>
+                        <div>
+                            <div style="font-weight:800;font-size:1rem;color:#fff;">Leo<span style="color:#4fd1c5;">Mox</span> HRMS</div>
+                            <div style="font-size:0.65rem;color:#718096;letter-spacing:0.5px;">HR Portal</div>
+                        </div>
+                    </div>
+                    <nav class="hrms-nav">${navHTML}</nav>
+                    <div class="hrms-sidebar-user">
+                        <div class="hrms-user-avatar">${u.name.charAt(0)}</div>
+                        <div>
+                            <div style="font-weight:600;font-size:0.88rem;color:#fff;">${u.name}</div>
+                            <div style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:${role.color}22;color:${role.color};display:inline-block;margin-top:2px;">${role.label}</div>
+                        </div>
+                        <button onclick="hrmsLogout()" title="Logout" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:1.1rem;opacity:0.6;" title="Logout">🚪</button>
+                    </div>
+                </div>
+                <!-- Main Content -->
+                <div class="hrms-main">
+                    <div class="hrms-header">
+                        <button class="hrms-menu-toggle" onclick="document.getElementById('hrmsSidebar').classList.toggle('open')">☰</button>
+                        <h2 class="hrms-page-title" id="hrmsPageTitle">${navItems.find(n=>n.id===HRMS.activeModule)?.label||'Dashboard'}</h2>
+                        <button class="hrms-logout-btn" onclick="hrmsLogout()">⬅ Logout</button>
+                    </div>
+                    <div class="hrms-content" id="hrmsContent"></div>
+                </div>
+            </div>`;
+
+            hrmsRenderModule(HRMS.activeModule);
+        }
+
+        function hrmsNav(module) {
+            HRMS.activeModule = module;
+            // Update active nav button
+            document.querySelectorAll('.hrms-nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.hrms-nav-btn').forEach(b => { if(b.onclick?.toString().includes(module)) b.classList.add('active'); });
+            document.getElementById('hrmsPageTitle').textContent = module.charAt(0).toUpperCase()+module.slice(1);
+            hrmsRenderModule(module);
+            // Close sidebar on mobile
+            document.getElementById('hrmsSidebar')?.classList.remove('open');
+        }
+        window.hrmsNav = hrmsNav;
+
+        function hrmsRenderModule(mod) {
+            const el = document.getElementById('hrmsContent');
+            if (!el) return;
+            const renders = { dashboard:renderDashboard, employees:renderEmployees, users:renderUsers, attendance:renderAttendance, payroll:renderPayroll, invoice:renderInvoice, settings:renderSettings };
+            if (renders[mod]) el.innerHTML = renders[mod]();
+            else el.innerHTML = '<p style="color:#bdc3c7;">Module coming soon.</p>';
+        }
+
+        // ── DASHBOARD ─────────────────────────────────────────────────────
+        function renderDashboard() {
+            const totalEmp = HRMS.employees.length;
+            const activeEmp = HRMS.employees.filter(e=>e.status==='Active').length;
+            const totalInv = HRMS.invoices.reduce((s,i)=>s+i.amount,0);
+            const pendingInv = HRMS.invoices.filter(i=>i.status==='Pending').length;
+            return `
+            <div class="hrms-dash-stats">
+                <div class="hds-card"><div class="hds-icon">👥</div><div class="hds-num">${totalEmp}</div><div class="hds-label">Total Employees</div></div>
+                <div class="hds-card"><div class="hds-icon">✅</div><div class="hds-num">${activeEmp}</div><div class="hds-label">Active</div></div>
+                <div class="hds-card"><div class="hds-icon">🧾</div><div class="hds-num">₹${(totalInv/1000).toFixed(0)}K</div><div class="hds-label">Total Invoiced</div></div>
+                <div class="hds-card"><div class="hds-icon">⏳</div><div class="hds-num">${pendingInv}</div><div class="hds-label">Pending Invoices</div></div>
+            </div>
+            <div class="hrms-dash-grid">
+                <div class="hrms-card">
+                    <h4>Recent Employees</h4>
+                    ${HRMS.employees.slice(0,3).map(e=>`<div class="hrms-list-row"><span class="hrms-avatar">${e.name.charAt(0)}</span><div><b>${e.name}</b><br><small>${e.designation} · ${e.dept}</small></div><span class="hrms-badge">${e.status}</span></div>`).join('')}
+                </div>
+                <div class="hrms-card">
+                    <h4>Recent Invoices</h4>
+                    ${HRMS.invoices.slice(0,3).map(i=>`<div class="hrms-list-row"><span style="font-size:1.4rem;">🧾</span><div><b>${i.id}</b><br><small>${i.client}</small></div><span class="hrms-badge ${i.status==='Paid'?'paid':'pending'}">₹${i.amount.toLocaleString()}</span></div>`).join('')}
+                </div>
+            </div>`;
+        }
+
+        // ── EMPLOYEES ─────────────────────────────────────────────────────
+        function renderEmployees() {
+            const isAdmin = can('users');
+            return `
+            <div class="hrms-toolbar">
+                ${isAdmin?`<button class="hrms-btn-primary" onclick="showAddEmployee()">+ Add Employee</button>`:''}
+            </div>
+            <div id="empFormWrap" style="display:none;" class="hrms-card" style="margin-bottom:1.5rem;"></div>
+            <div class="hrms-table-wrap">
+                <table class="hrms-table" id="empTable">
+                    <thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Designation</th><th>Phone</th><th>Salary</th><th>Status</th>${isAdmin?'<th>Actions</th>':''}</tr></thead>
+                    <tbody>${HRMS.employees.map(e=>`
+                        <tr>
+                            <td>${e.id}</td>
+                            <td><span class="hrms-avatar sm">${e.name.charAt(0)}</span> ${e.name}</td>
+                            <td>${e.dept}</td>
+                            <td>${e.designation}</td>
+                            <td>${e.phone}</td>
+                            <td>₹${e.salary.toLocaleString()}</td>
+                            <td><span class="hrms-badge ${e.status==='Active'?'paid':'pending'}">${e.status}</span></td>
+                            ${isAdmin?`<td><button class="hrms-btn-sm" onclick="editEmployee('${e.id}')">✏️</button> <button class="hrms-btn-sm danger" onclick="deleteEmployee('${e.id}')">🗑️</button></td>`:''}
+                        </tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+        }
+
+        function showAddEmployee(id) {
+            const wrap = document.getElementById('empFormWrap');
+            if (!wrap) return;
+            const e = id ? HRMS.employees.find(x=>x.id===id) : null;
+            wrap.style.display = 'block';
+            wrap.innerHTML = `
+            <h4>${e?'Edit':'Add'} Employee</h4>
+            <div class="hrms-form-grid">
+                <div class="hrms-form-field"><label>Full Name</label><input id="ef_name" value="${e?.name||''}"></div>
+                <div class="hrms-form-field"><label>Department</label><input id="ef_dept" value="${e?.dept||''}"></div>
+                <div class="hrms-form-field"><label>Designation</label><input id="ef_desig" value="${e?.designation||''}"></div>
+                <div class="hrms-form-field"><label>Phone</label><input id="ef_phone" value="${e?.phone||''}"></div>
+                <div class="hrms-form-field"><label>Email</label><input id="ef_email" value="${e?.email||''}"></div>
+                <div class="hrms-form-field"><label>Salary (₹)</label><input id="ef_salary" type="number" value="${e?.salary||''}"></div>
+                <div class="hrms-form-field"><label>Joined Date</label><input id="ef_joined" type="date" value="${e?.joined||''}"></div>
+                <div class="hrms-form-field"><label>Status</label><select id="ef_status"><option ${e?.status==='Active'?'selected':''}>Active</option><option ${e?.status==='Inactive'?'selected':''}>Inactive</option></select></div>
+            </div>
+            <div style="display:flex;gap:0.75rem;margin-top:1rem;">
+                <button class="hrms-btn-primary" onclick="saveEmployee('${id||''}')">💾 Save</button>
+                <button class="hrms-btn-secondary" onclick="document.getElementById('empFormWrap').style.display='none'">Cancel</button>
+            </div>`;
+        }
+
+        function saveEmployee(id) {
+            const name = document.getElementById('ef_name').value.trim();
+            if (!name) { alert('Name is required'); return; }
+            if (id) {
+                const e = HRMS.employees.find(x=>x.id===id);
+                e.name=name; e.dept=document.getElementById('ef_dept').value; e.designation=document.getElementById('ef_desig').value;
+                e.phone=document.getElementById('ef_phone').value; e.email=document.getElementById('ef_email').value;
+                e.salary=parseInt(document.getElementById('ef_salary').value)||0; e.joined=document.getElementById('ef_joined').value;
+                e.status=document.getElementById('ef_status').value;
+            } else {
+                const newId = 'EMP' + String(HRMS.employees.length+1).padStart(3,'0');
+                HRMS.employees.push({ id:newId, name, dept:document.getElementById('ef_dept').value, designation:document.getElementById('ef_desig').value,
+                    phone:document.getElementById('ef_phone').value, email:document.getElementById('ef_email').value,
+                    salary:parseInt(document.getElementById('ef_salary').value)||0, joined:document.getElementById('ef_joined').value,
+                    status:document.getElementById('ef_status').value||'Active' });
+            }
+            hrmsRenderModule('employees');
+        }
+
+        function editEmployee(id) { showAddEmployee(id); }
+        function deleteEmployee(id) {
+            if (!confirm('Delete this employee?')) return;
+            HRMS.employees = HRMS.employees.filter(e=>e.id!==id);
+            hrmsRenderModule('employees');
+        }
+        window.showAddEmployee=showAddEmployee; window.saveEmployee=saveEmployee; window.editEmployee=editEmployee; window.deleteEmployee=deleteEmployee;
+
+        // ── USERS ─────────────────────────────────────────────────────────
+        function renderUsers() {
+            return `
+            <div class="hrms-toolbar">
+                <button class="hrms-btn-primary" onclick="showAddUser()">+ Add User</button>
+            </div>
+            <div id="userFormWrap" style="display:none;" class="hrms-card"></div>
+            <div class="hrms-table-wrap">
+                <table class="hrms-table">
+                    <thead><tr><th>User ID</th><th>Name</th><th>Role</th><th>Permissions</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>${HRMS.users.map(u=>{
+                        const r = HRMS.roles[u.role];
+                        return `<tr>
+                            <td><code>${u.id}</code></td>
+                            <td>${u.name}</td>
+                            <td><span class="hrms-role-badge" style="background:${r.color}22;color:${r.color}">${r.label}</span></td>
+                            <td><div class="hrms-perm-tags">${r.permissions.map(p=>`<span class="hrms-perm-tag">${p}</span>`).join('')}</div></td>
+                            <td><span class="hrms-badge ${u.active?'paid':'pending'}">${u.active?'Active':'Disabled'}</span></td>
+                            <td>
+                                <button class="hrms-btn-sm" onclick="toggleUser('${u.id}')">${u.active?'🔒':'🔓'}</button>
+                                <button class="hrms-btn-sm" onclick="editUser('${u.id}')">✏️</button>
+                                ${u.id!=='admin'?`<button class="hrms-btn-sm danger" onclick="deleteUser('${u.id}')">🗑️</button>`:''}
+                            </td>
+                        </tr>`}).join('')}
+                    </tbody>
+                </table>
+            </div>
+            <div class="hrms-card" style="margin-top:1.5rem;">
+                <h4>Role Hierarchy & Permissions</h4>
+                <div class="hrms-role-grid">
+                    ${Object.entries(HRMS.roles).map(([k,r])=>`
+                    <div class="hrms-role-card" style="border-color:${r.color}44;">
+                        <div class="hrms-role-title" style="color:${r.color}">🔑 ${r.label}</div>
+                        <div class="hrms-perm-tags">${r.permissions.map(p=>`<span class="hrms-perm-tag">${p}</span>`).join('')}</div>
+                    </div>`).join('')}
+                </div>
+            </div>`;
+        }
+
+        function showAddUser(id) {
+            const wrap = document.getElementById('userFormWrap');
+            if (!wrap) return;
+            const u = id ? HRMS.users.find(x=>x.id===id) : null;
+            wrap.style.display='block';
+            wrap.innerHTML=`
+            <h4>${u?'Edit':'Add'} User</h4>
+            <div class="hrms-form-grid">
+                <div class="hrms-form-field"><label>User ID</label><input id="uf_id" value="${u?.id||''}" ${u?'readonly':''}></div>
+                <div class="hrms-form-field"><label>Full Name</label><input id="uf_name" value="${u?.name||''}"></div>
+                <div class="hrms-form-field"><label>Password</label><input id="uf_pwd" type="password" placeholder="${u?'Leave blank to keep':'Set password'}"></div>
+                <div class="hrms-form-field"><label>Role</label>
+                    <select id="uf_role">
+                        ${Object.entries(HRMS.roles).map(([k,r])=>`<option value="${k}" ${u?.role===k?'selected':''}>${r.label}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
+            <div style="display:flex;gap:.75rem;margin-top:1rem;">
+                <button class="hrms-btn-primary" onclick="saveUser('${id||''}')">💾 Save User</button>
+                <button class="hrms-btn-secondary" onclick="document.getElementById('userFormWrap').style.display='none'">Cancel</button>
+            </div>`;
+        }
+
+        function saveUser(id) {
+            const uid = document.getElementById('uf_id').value.trim();
+            const name = document.getElementById('uf_name').value.trim();
+            const pwd = document.getElementById('uf_pwd').value;
+            const role = document.getElementById('uf_role').value;
+            if (!uid||!name) { alert('User ID and Name are required'); return; }
+            if (id) {
+                const u = HRMS.users.find(x=>x.id===id);
+                u.name=name; u.role=role;
+                if (pwd) u.password=pwd;
+            } else {
+                if (!pwd) { alert('Password is required for new users'); return; }
+                if (HRMS.users.find(x=>x.id===uid)) { alert('User ID already exists'); return; }
+                HRMS.users.push({ id:uid, password:pwd, role, name, active:true });
+            }
+            hrmsRenderModule('users');
+        }
+
+        function toggleUser(id) {
+            if (id==='admin') { alert('Cannot disable super admin'); return; }
+            const u = HRMS.users.find(x=>x.id===id);
+            u.active = !u.active;
+            hrmsRenderModule('users');
+        }
+        function editUser(id) { showAddUser(id); }
+        function deleteUser(id) {
+            if (id==='admin') return;
+            if (!confirm('Delete this user?')) return;
+            HRMS.users = HRMS.users.filter(u=>u.id!==id);
+            hrmsRenderModule('users');
+        }
+        window.showAddUser=showAddUser; window.saveUser=saveUser; window.toggleUser=toggleUser; window.editUser=editUser; window.deleteUser=deleteUser;
+
+        // ── ATTENDANCE ────────────────────────────────────────────────────
+        function renderAttendance() {
+            const today = new Date().toISOString().split('T')[0];
+            return `
+            <div class="hrms-card">
+                <h4>Mark Attendance — ${new Date().toDateString()}</h4>
+                <div class="hrms-table-wrap">
+                    <table class="hrms-table">
+                        <thead><tr><th>Employee</th><th>Department</th><th>Status</th><th>In Time</th><th>Out Time</th></tr></thead>
+                        <tbody>${HRMS.employees.filter(e=>e.status==='Active').map(e=>`
+                        <tr>
+                            <td>${e.name}</td>
+                            <td>${e.dept}</td>
+                            <td>
+                                <select class="hrms-select-inline">
+                                    <option>Present</option>
+                                    <option>Absent</option>
+                                    <option>Half Day</option>
+                                    <option>Leave</option>
+                                </select>
+                            </td>
+                            <td><input type="time" class="hrms-time-input" value="09:00"></td>
+                            <td><input type="time" class="hrms-time-input" value="18:00"></td>
+                        </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                <button class="hrms-btn-primary" style="margin-top:1rem;" onclick="alert('Attendance saved!')">💾 Save Attendance</button>
+            </div>`;
+        }
+
+        // ── PAYROLL ───────────────────────────────────────────────────────
+        function renderPayroll() {
+            return `
+            <div class="hrms-table-wrap">
+                <table class="hrms-table">
+                    <thead><tr><th>Employee</th><th>Designation</th><th>Basic</th><th>Allowances</th><th>Deductions</th><th>Net Pay</th><th>Action</th></tr></thead>
+                    <tbody>${HRMS.employees.map(e=>{
+                        const allowance = Math.round(e.salary * 0.20);
+                        const deduction = Math.round(e.salary * 0.12);
+                        const net = e.salary + allowance - deduction;
+                        return `<tr>
+                            <td><span class="hrms-avatar sm">${e.name.charAt(0)}</span> ${e.name}</td>
+                            <td>${e.designation}</td>
+                            <td>₹${e.salary.toLocaleString()}</td>
+                            <td style="color:#48bb78;">+₹${allowance.toLocaleString()}</td>
+                            <td style="color:#fc8181;">-₹${deduction.toLocaleString()}</td>
+                            <td><b>₹${net.toLocaleString()}</b></td>
+                            <td><button class="hrms-btn-sm" onclick="genPayslip('${e.id}')">🧾 Payslip</button></td>
+                        </tr>`}).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+        }
+
+        function genPayslip(id) {
+            const e = HRMS.employees.find(x=>x.id===id);
+            const allowance = Math.round(e.salary * 0.20);
+            const deduction = Math.round(e.salary * 0.12);
+            const net = e.salary + allowance - deduction;
+            const w = window.open('','_blank');
+            w.document.write(`<html><head><title>Payslip - ${e.name}</title><style>body{font-family:Arial;padding:30px;max-width:600px;margin:auto}h2{color:#38b2ac}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee}.total{font-weight:bold;font-size:1.2em;color:#2d3748}button{background:#38b2ac;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;margin-top:20px}</style></head><body>
+            <h2>LeoMox IT Solutions - Payslip</h2>
+            <p><b>Employee:</b> ${e.name} | <b>ID:</b> ${e.id} | <b>Dept:</b> ${e.dept}</p>
+            <div class="row"><span>Basic Salary</span><span>₹${e.salary.toLocaleString()}</span></div>
+            <div class="row"><span>HRA & Allowances</span><span style="color:green">+₹${allowance.toLocaleString()}</span></div>
+            <div class="row"><span>PF & Deductions</span><span style="color:red">-₹${deduction.toLocaleString()}</span></div>
+            <div class="row total"><span>Net Pay</span><span>₹${net.toLocaleString()}</span></div>
+            <button onclick="window.print()">🖨️ Print Payslip</button></body></html>`);
+        }
+        window.genPayslip = genPayslip;
+
+        // ── INVOICE ───────────────────────────────────────────────────────
+        function renderInvoice() {
+            return `
+            <div class="hrms-toolbar">
+                <button class="hrms-btn-primary" onclick="showAddInvoice()">+ New Invoice</button>
+            </div>
+            <div id="invFormWrap" style="display:none;" class="hrms-card"></div>
+            <div class="hrms-table-wrap">
+                <table class="hrms-table">
+                    <thead><tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>${HRMS.invoices.map(i=>`
+                    <tr>
+                        <td><b>${i.id}</b></td>
+                        <td>${i.client}</td>
+                        <td>₹${i.amount.toLocaleString()}</td>
+                        <td>${i.date}</td>
+                        <td><span class="hrms-badge ${i.status==='Paid'?'paid':'pending'}">${i.status}</span></td>
+                        <td>
+                            <button class="hrms-btn-sm" onclick="printInvoice('${i.id}')">🖨️ Print</button>
+                            <button class="hrms-btn-sm" onclick="toggleInvStatus('${i.id}')">${i.status==='Paid'?'Mark Pending':'Mark Paid'}</button>
+                        </td>
+                    </tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+        }
+
+        function showAddInvoice() {
+            const wrap = document.getElementById('invFormWrap');
+            wrap.style.display='block';
+            wrap.innerHTML=`
+            <h4>New Invoice</h4>
+            <div class="hrms-form-grid">
+                <div class="hrms-form-field"><label>Client Name</label><input id="if_client" placeholder="Client company name"></div>
+                <div class="hrms-form-field"><label>Invoice Date</label><input id="if_date" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
+            </div>
+            <div id="invItems">
+                <div class="hrms-inv-row"><input id="if_desc0" placeholder="Item description" style="flex:3"><input id="if_qty0" placeholder="Qty" type="number" style="flex:1"><input id="if_rate0" placeholder="Rate (₹)" type="number" style="flex:1"></div>
+            </div>
+            <button class="hrms-btn-secondary" onclick="addInvItem()" style="margin-top:0.5rem;">+ Add Item</button>
+            <div style="display:flex;gap:.75rem;margin-top:1rem;">
+                <button class="hrms-btn-primary" onclick="saveInvoice()">💾 Save Invoice</button>
+                <button class="hrms-btn-secondary" onclick="document.getElementById('invFormWrap').style.display='none'">Cancel</button>
+            </div>`;
+        }
+
+        let invItemCount = 1;
+        function addInvItem() {
+            const c = invItemCount++;
+            const div = document.createElement('div');
+            div.className = 'hrms-inv-row';
+            div.innerHTML = `<input id="if_desc${c}" placeholder="Item description" style="flex:3"><input id="if_qty${c}" placeholder="Qty" type="number" style="flex:1"><input id="if_rate${c}" placeholder="Rate (₹)" type="number" style="flex:1">`;
+            document.getElementById('invItems').appendChild(div);
+        }
+
+        function saveInvoice() {
+            const client = document.getElementById('if_client')?.value.trim();
+            const date = document.getElementById('if_date')?.value;
+            if (!client) { alert('Client name is required'); return; }
+            const items = [];
+            let total = 0;
+            for (let i=0; i<10; i++) {
+                const d = document.getElementById('if_desc'+i);
+                if (!d) break;
+                const q = parseFloat(document.getElementById('if_qty'+i)?.value)||0;
+                const r = parseFloat(document.getElementById('if_rate'+i)?.value)||0;
+                if (d.value.trim()) { items.push({desc:d.value,qty:q,rate:r}); total+=q*r; }
+            }
+            const newId = 'INV' + String(HRMS.invoices.length+1).padStart(3,'0');
+            HRMS.invoices.unshift({ id:newId, client, amount:total, date, status:'Pending', items });
+            invItemCount = 1;
+            hrmsRenderModule('invoice');
+        }
+
+        function toggleInvStatus(id) {
+            const inv = HRMS.invoices.find(i=>i.id===id);
+            inv.status = inv.status==='Paid'?'Pending':'Paid';
+            hrmsRenderModule('invoice');
+        }
+
+        function printInvoice(id) {
+            const inv = HRMS.invoices.find(i=>i.id===id);
+            const rows = inv.items.map(item=>`<tr><td>${item.desc}</td><td>${item.qty}</td><td>₹${item.rate}</td><td>₹${(item.qty*item.rate).toLocaleString()}</td></tr>`).join('');
+            const w = window.open('','_blank');
+            w.document.write(`<html><head><title>Invoice ${inv.id}</title><style>body{font-family:Arial;padding:30px;max-width:700px;margin:auto}h2{color:#38b2ac}.header{display:flex;justify-content:space-between;margin-bottom:20px}table{width:100%;border-collapse:collapse}th{background:#f0fafa;text-align:left;padding:10px}td{padding:10px;border-bottom:1px solid #eee}.total{text-align:right;font-size:1.3em;font-weight:bold;margin-top:15px;color:#2d3748}.badge{padding:4px 12px;border-radius:99px;font-size:0.85em;background:${inv.status==='Paid'?'#c6f6d5':'#feebc8'};color:${inv.status==='Paid'?'#276749':'#7b341e'}}button{background:#38b2ac;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;margin-top:20px}</style></head><body>
+            <div class="header"><div><h2>LeoMox IT Solutions</h2><p>info@leomox.in | +91 95739 99700<br>Kolanukonda, Mangalagiri, Guntur, AP</p></div>
+            <div style="text-align:right"><h3>INVOICE</h3><p><b>${inv.id}</b><br>Date: ${inv.date}<br><span class="badge">${inv.status}</span></p></div></div>
+            <p><b>Bill To:</b> ${inv.client}</p>
+            <table><thead><tr><th>Description</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead><tbody>${rows}</tbody></table>
+            <div class="total">Total: ₹${inv.amount.toLocaleString()}</div>
+            <button onclick="window.print()">🖨️ Print / Save PDF</button></body></html>`);
+        }
+        window.showAddInvoice=showAddInvoice; window.addInvItem=addInvItem; window.saveInvoice=saveInvoice; window.toggleInvStatus=toggleInvStatus; window.printInvoice=printInvoice;
+
+        // ── SETTINGS ──────────────────────────────────────────────────────
+        function renderSettings() {
+            return `
+            <div class="hrms-card">
+                <h4>Company Settings</h4>
+                <div class="hrms-form-grid">
+                    <div class="hrms-form-field"><label>Company Name</label><input value="LeoMox IT Solutions"></div>
+                    <div class="hrms-form-field"><label>Email</label><input value="info@leomox.in"></div>
+                    <div class="hrms-form-field"><label>Phone</label><input value="+91 95739 99700"></div>
+                    <div class="hrms-form-field"><label>Address</label><input value="Kolanukonda, Mangalagiri, Guntur, AP"></div>
+                </div>
+                <button class="hrms-btn-primary" style="margin-top:1rem;" onclick="alert('Settings saved!')">💾 Save Settings</button>
+            </div>`;
+        }
     </script>
 </body>
 </html>
