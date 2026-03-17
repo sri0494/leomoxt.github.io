@@ -17,7 +17,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0;
+            gap: 1.4rem;
             opacity: 1;
             transition: opacity 0.5s ease, transform 0.5s ease;
             pointer-events: all;
@@ -28,8 +28,6 @@
             transform: scale(1.04);
             pointer-events: none;
         }
-
-        /* Animated mesh background */
         #loading-overlay::before {
             content: '';
             position: absolute;
@@ -43,117 +41,17 @@
             from { transform: translate(0,0); }
             to   { transform: translate(61px, 61px); }
         }
-
-        /* Outer spinning ring */
-        .loader-ring-outer {
-            position: absolute;
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            border: 1px solid rgba(79,209,197,0.15);
-            border-top: 2px solid rgba(79,209,197,0.8);
-            border-right: 2px solid rgba(79,209,197,0.4);
-            animation: spinCW 2.4s linear infinite;
-            box-shadow: 0 0 30px rgba(79,209,197,0.1), inset 0 0 30px rgba(79,209,197,0.05);
+        #gem-canvas {
+            animation: gemEntrance 0.7s cubic-bezier(0.175,0.885,0.32,1.275) both;
         }
-        /* Middle spinning ring */
-        .loader-ring-mid {
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 1px solid rgba(79,209,197,0.1);
-            border-bottom: 2px solid rgba(79,209,197,0.7);
-            border-left: 2px solid rgba(79,209,197,0.3);
-            animation: spinCCW 1.8s linear infinite;
-        }
-        /* Inner spinning ring */
-        .loader-ring-inner {
-            position: absolute;
-            width: 148px;
-            height: 148px;
-            border-radius: 50%;
-            border: 1px solid rgba(79,209,197,0.08);
-            border-top: 1.5px solid rgba(56,178,172,0.9);
-            animation: spinCW 1.2s linear infinite;
-        }
-        @keyframes spinCW  { from { transform: rotate(0deg);   } to { transform: rotate(360deg);  } }
-        @keyframes spinCCW { from { transform: rotate(0deg);   } to { transform: rotate(-360deg); } }
-
-        /* Logo wrapper */
-        .loader-logo-wrap {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 220px;
-            height: 220px;
-            margin-bottom: 2rem;
-        }
-        .loader-logo-wrap img {
-            width: 96px;
-            height: 96px;
-            border-radius: 20px;
-            object-fit: cover;
-            position: relative;
-            z-index: 2;
-            animation: logoEntrance 0.6s cubic-bezier(0.175,0.885,0.32,1.275) both, logoGlow 2s ease-in-out 0.6s infinite alternate;
-        }
-        @keyframes logoEntrance {
-            from { opacity: 0; transform: scale(0.4) rotate(-15deg); }
+        @keyframes gemEntrance {
+            from { opacity: 0; transform: scale(0.3) rotate(-20deg); }
             to   { opacity: 1; transform: scale(1) rotate(0deg); }
         }
-        @keyframes logoGlow {
-            from { box-shadow: 0 0 20px rgba(79,209,197,0.4), 0 0 0 0 rgba(79,209,197,0); }
-            to   { box-shadow: 0 0 40px rgba(79,209,197,0.9), 0 0 80px rgba(79,209,197,0.3); }
-        }
-
-        /* Orbiting dot */
-        .loader-orbit {
-            position: absolute;
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            animation: spinCW 3s linear infinite;
-        }
-        .loader-orbit::before {
-            content: '';
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #4fd1c5;
-            border-radius: 50%;
-            top: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 0 12px #4fd1c5, 0 0 24px rgba(79,209,197,0.6);
-        }
-        .loader-orbit-2 {
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            animation: spinCCW 2s linear infinite;
-        }
-        .loader-orbit-2::before {
-            content: '';
-            position: absolute;
-            width: 7px;
-            height: 7px;
-            background: rgba(79,209,197,0.7);
-            border-radius: 50%;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 0 8px #4fd1c5;
-        }
-
-        /* Brand text */
         .loader-brand {
             position: relative;
             z-index: 2;
             text-align: center;
-            margin-bottom: 2.5rem;
             animation: fadeUp 0.6s ease 0.3s both;
         }
         @keyframes fadeUp {
@@ -170,16 +68,12 @@
         .loader-brand-name .leo { color: #4fd1c5; }
         .loader-brand-name .mox { color: #ffffff; }
         .loader-brand-sub {
-            font-family: 'Outfit', sans-serif;
             font-size: 0.7rem;
-            font-weight: 400;
             color: rgba(79,209,197,0.7);
             letter-spacing: 5px;
             text-transform: uppercase;
             margin-top: 4px;
         }
-
-        /* Progress bar */
         .loader-bar-wrap {
             position: relative;
             z-index: 2;
@@ -196,34 +90,12 @@
             background: linear-gradient(90deg, #4fd1c5, #38b2ac, #4fd1c5);
             background-size: 200% 100%;
             border-radius: 99px;
-            animation: barFill 1s ease 0.2s forwards, barShimmer 1s linear 0.2s infinite;
+            animation: barFill 0.8s ease 0.2s forwards, barShimmer 1s linear 0.2s infinite;
             box-shadow: 0 0 10px rgba(79,209,197,0.8);
         }
-        @keyframes barFill {
-            from { width: 0%; }
-            to   { width: 100%; }
-        }
-        @keyframes barShimmer {
-            from { background-position: 200% 0; }
-            to   { background-position: -200% 0; }
-        }
+        @keyframes barFill { from { width: 0%; } to { width: 100%; } }
+        @keyframes barShimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 
-        /* Floating particles in loader */
-        .loader-particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: rgba(79,209,197,0.6);
-            border-radius: 50%;
-            box-shadow: 0 0 6px rgba(79,209,197,0.8);
-            animation: lParticle var(--dur, 3s) ease-in-out var(--delay, 0s) infinite;
-        }
-        @keyframes lParticle {
-            0%   { transform: translate(0,0) scale(1); opacity: 0; }
-            20%  { opacity: 1; }
-            80%  { opacity: 1; }
-            100% { transform: translate(var(--tx,40px), var(--ty,-80px)) scale(0); opacity: 0; }
-        }
 
         :root {
             --primary: #4fd1c5;
@@ -1896,31 +1768,12 @@ to { opacity: 1; transform: translateY(0); }
 </head>
 <body>
         <div id="loading-overlay">
-        <!-- Loader particles -->
-        <div class="loader-particle" style="--dur:2.5s;--delay:0s;--tx:60px;--ty:-120px;left:45%;top:70%;"></div>
-        <div class="loader-particle" style="--dur:3s;--delay:0.4s;--tx:-80px;--ty:-100px;left:55%;top:65%;"></div>
-        <div class="loader-particle" style="--dur:2s;--delay:0.8s;--tx:40px;--ty:-140px;left:40%;top:75%;"></div>
-        <div class="loader-particle" style="--dur:3.5s;--delay:0.2s;--tx:-50px;--ty:-110px;left:60%;top:60%;"></div>
-        <div class="loader-particle" style="--dur:2.8s;--delay:1s;--tx:70px;--ty:-90px;left:35%;top:72%;"></div>
-        <div class="loader-particle" style="--dur:2.2s;--delay:0.6s;--tx:-30px;--ty:-130px;left:65%;top:68%;"></div>
-        <!-- Spinning rings + logo -->
-        <div class="loader-logo-wrap">
-            <div class="loader-ring-outer"></div>
-            <div class="loader-ring-mid"></div>
-            <div class="loader-ring-inner"></div>
-            <div class="loader-orbit"></div>
-            <div class="loader-orbit-2"></div>
-            <img src="data:image/png;base64,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" alt="LeoMox Logo">
-        </div>
-        <!-- Brand -->
+        <canvas id="gem-canvas" width="200" height="200" style="position:relative;z-index:2;"></canvas>
         <div class="loader-brand">
             <div class="loader-brand-name"><span class="leo">Leo</span><span class="mox">Mox</span></div>
             <div class="loader-brand-sub">IT Solutions</div>
         </div>
-        <!-- Progress bar -->
-        <div class="loader-bar-wrap">
-            <div class="loader-bar"></div>
-        </div>
+        <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
     </div>
 
     <div class="bg-animation">
@@ -1944,18 +1797,7 @@ to { opacity: 1; transform: translateY(0); }
     <header>
         <nav>
             <a href="#home" class="logo">
-                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#2D3748;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#4FD1C5;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <rect width="40" height="40" rx="8" fill="url(#logoGrad)"/>
-                    <path d="M12 14L20 10L28 14V26L20 30L12 26V14Z" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
-                    <path d="M20 10V18M20 18L12 22M20 18L28 22" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-                    <circle cx="20" cy="18" r="2" fill="#ffffff"/>
-                </svg>
+                <canvas id="nav-gem" width="54" height="54" style="display:block;flex-shrink:0;"></canvas>
                 <div style="display: flex; flex-direction: column;">
                     <span style="font-size: 1.25rem; font-weight: 700;">
                         <span style="color: #4fd1c5;">Leo</span><span style="color: #2d3748;">Mox</span>
@@ -2008,7 +1850,7 @@ to { opacity: 1; transform: translateY(0); }
     <div class="mobile-nav-panel" id="mobilePanel">
         <div class="mobile-nav-header">
             <a href="#home" class="logo mobile-logo-link" style="text-decoration:none;display:flex;align-items:center;gap:0.6rem;">
-                <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAyADUDASIAAhEBAxEB/8QAHAAAAgIDAQEAAAAAAAAAAAAAAAgFBgECAwQH/8QAMxAAAQMDAgQDBwIHAAAAAAAAAQIDBAAFBhEhBxIxUUGBsRMUMmFxg9IzhCIjJUJDlNH/xAAaAQACAwEBAAAAAAAAAAAAAAADBAABBQIG/8QAJREAAgIBBAAGAwAAAAAAAAAAAAECAxEEEiExBRMiMkFhcZHB/9oADAMBAAIRAxEAPwBt1HSqllfEbDcYle63m+x2JHi0kFxY+oSCR51I5zc3bRiN1ubA1djRXHEfUDakQeckz5r0yW6t6Q8srcWo6lRPU0euvd2KWWbRxE8auHKvhv5P7R78a6J4xcPldL6T+1d/GlDjMfKrAbHc4sJmbJt8lmM9+m6tshKvoaL5MRSeqkuhokcW8DUdr0f9Z38atOP3+036MZNpnsy2wdFch3T9R1HnSdxmOm1XrhPOlWrMreqOtSUPupZdSDspKjpv61UqVjgDDxCW9KS4GfCtqK5pO1FLGtkq/FXfh5fh3guelJXGY+VOtxOGuBXwd4TnpSeRWOm1M0dGfqp4Z9MtLNjwrBbBkKbIzdb3d/brbdlnmajBtYA5UdCrcHU9j3q+ZHlWTW/AsYudygsTGJyHffGZDA9msFRKBoPh/h6aeFRLl2g2PhZh0tePxrrNDckRnZQKmY/8wako6KJOmmvao2NxMyqSstXdcS6wl7LiSIyPZkdhoARp4Ve1y5wBnfGvjdjKXS/HZwzqz2ZNus9+s0JUBu5NrU5G5+ZKFJP9p7fKvLhDPLlFsOnSSj1FW7iN7lIxXGXYEBcFlSHSmOpRUEakbAnfTWoHDmdMitx06SEetdx9pl6mSjekvr+DDt9KKwjpRSZ6dMgeI6CrB70kDUmG5t5UpkZjptTozY7cmO4w6gKbcSUqB8Qa+C5HwlvcO4uKszbc2GpRLY9olK0DsQojXyo9MkuGZ2vrm8OKyQWH5ddbLDFtWhmfaySVQ5KOZG51OnY1ZGr7iMM++2fF9J69+WS5zssnulPj51HM8PMsR8VpI+83+Ve5jA8mT8VrI+6j8qL6H8mVKepSwov9ZwR90ulyvcpMi4yFOqSNEJ6JQOwHhUliTH9fgaD/ADo9a9sfCshTprbiPuo/7VywvEHoMpE648gcR+m0k66HuTUlOKQtXptRdcsxffbLugbUVukaCikz16Rk1yXRRURJGlYooqAmbdq6N0UVGdxOlFFFUEP/2Q==" alt="LeoMox" style="width:36px;height:36px;border-radius:8px;object-fit:cover;">
+                <canvas id="mob-gem" width="48" height="48" style="display:block;"></canvas>
                 <div>
                     <div style="font-size:1.1rem;font-weight:700;"><span style="color:#4fd1c5;">Leo</span><span style="color:#2d3748;">Mox</span></div>
                     <div style="font-size:0.6rem;color:#718096;letter-spacing:0.5px;">IT SOLUTIONS</div>
@@ -3501,6 +3343,105 @@ to { opacity: 1; transform: translateY(0); }
                 <button class="hrms-btn-sm danger" onclick="resetHRMSData()">🗑️ Reset All Data to Defaults</button>
             </div>`;
         }
+        // ── Gem Logo Engine ───────────────────────────────────────────────
+        (function(){
+            const phi=(1+Math.sqrt(5))/2;
+            const vRaw=[[0,1,phi],[0,-1,phi],[0,1,-phi],[0,-1,-phi],[1,phi,0],[-1,phi,0],[1,-phi,0],[-1,-phi,0],[phi,0,1],[phi,0,-1],[-phi,0,1],[-phi,0,-1]];
+            const verts=vRaw.map(([x,y,z])=>{const l=Math.sqrt(x*x+y*y+z*z);return[x/l,y/l,z/l];});
+            const faces=[[0,1,8],[0,8,4],[4,8,9],[9,8,1],[1,8,6],[0,4,5],[5,4,2],[2,4,9],[9,3,2],[3,9,6],[1,6,7],[6,3,7],[7,3,11],[11,3,2],[11,2,5],[0,5,10],[10,5,11],[11,7,10],[10,7,1],[10,1,0]];
+            const faceColors=['#4fd1c5','#38b2ac','#2c7a7b','#81e6d9','#4fd1c5','#1a9e9a','#38b2ac','#4fd1c5','#2c7a7b','#81e6d9','#38b2ac','#1a9e9a','#4fd1c5','#2c7a7b','#81e6d9','#38b2ac','#4fd1c5','#2c7a7b','#1a9e9a','#81e6d9'];
+            const rings=[{r:0,speed:0.008,tilt:1.2,color:'rgba(79,209,197,0.22)',w:1},{r:0,speed:-0.006,tilt:0.7,color:'rgba(129,230,217,0.15)',w:0.8},{r:0,speed:0.012,tilt:1.7,color:'rgba(44,122,123,0.28)',w:0.8}];
+
+            function proj(x,y,z,rx,ry,scale){
+                const cosX=Math.cos(rx),sinX=Math.sin(rx),cosY=Math.cos(ry),sinY=Math.sin(ry);
+                let y2=y*cosX-z*sinX,z2=y*sinX+z*cosX;
+                let x2=x*cosY+z2*sinY,z3=-x*sinY+z2*cosY;
+                const fov=5,sc=fov/(fov+z3*0.1);
+                return{x:x2*sc*scale,y:y2*sc*scale,z:z3};
+            }
+
+            function drawGem(canvas, size, t, speed, showRings){
+                if(!canvas) return;
+                const ctx=canvas.getContext('2d');
+                const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2;
+                const gemR=size*0.46;
+                const ringBase=[gemR*1.85,gemR*2.25,gemR*1.55];
+                ctx.clearRect(0,0,W,H);
+
+                const rx=-0.4,ry=t*speed;
+
+                // Rings (only on large gem)
+                if(showRings!==false){rings.forEach((ring,i)=>{
+                    ring.r=(ring.r||0)+ring.speed;
+                    const n=48,rr=ringBase[i];
+                    ctx.beginPath();
+                    for(let j=0;j<=n;j++){
+                        const a=ring.r+(j/n)*Math.PI*2;
+                        const x=cx+Math.cos(a)*rr;
+                        const y=cy+Math.sin(a)*rr*Math.sin(ring.tilt);
+                        j===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+                    }
+                    ctx.strokeStyle=ring.color;ctx.lineWidth=ring.w;ctx.stroke();
+                });}
+
+                // Faces
+                const projected=faces.map((f,fi)=>{
+                    const pts=f.map(vi=>{const[x,y,z]=verts[vi];return proj(x,y,z,rx,ry,gemR);});
+                    const avgZ=(pts[0].z+pts[1].z+pts[2].z)/3;
+                    const ax=pts[1].x-pts[0].x,ay=pts[1].y-pts[0].y,bx=pts[2].x-pts[0].x,by=pts[2].y-pts[0].y;
+                    return{pts,avgZ,nz:ax*by-ay*bx,fi};
+                }).filter(f=>f.nz<0).sort((a,b)=>a.avgZ-b.avgZ);
+
+                projected.forEach(({pts,avgZ,fi})=>{
+                    const br=Math.min(1,Math.max(0,(avgZ+2)/4));
+                    ctx.save();ctx.translate(cx,cy);
+                    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);ctx.lineTo(pts[1].x,pts[1].y);ctx.lineTo(pts[2].x,pts[2].y);ctx.closePath();
+                    ctx.fillStyle=faceColors[fi%faceColors.length];
+                    ctx.globalAlpha=0.7+br*0.3;ctx.fill();
+                    ctx.strokeStyle='rgba(4,52,44,0.35)';ctx.lineWidth=0.5;ctx.stroke();
+                    ctx.restore();
+                });
+
+                // Core glow
+                ctx.save();ctx.translate(cx,cy);
+                const g=ctx.createRadialGradient(0,0,0,0,0,gemR*0.45);
+                g.addColorStop(0,'rgba(129,230,217,0.9)');g.addColorStop(0.5,'rgba(79,209,197,0.5)');g.addColorStop(1,'rgba(79,209,197,0)');
+                ctx.globalAlpha=0.55;ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,gemR*0.45,0,Math.PI*2);ctx.fill();
+                ctx.restore();
+
+                // S symbol
+                ctx.save();ctx.translate(cx,cy);
+                const s=gemR*0.38;
+                ctx.globalAlpha=0.9;
+                ctx.strokeStyle='rgba(129,230,217,0.4)';ctx.lineWidth=s*0.45;ctx.lineCap='round';
+                ctx.beginPath();
+                ctx.moveTo(-s*0.6,s*0.95);ctx.bezierCurveTo(-s*1.1,s*0.95,-s*1.1,s*0.05,0,s*0.05);ctx.bezierCurveTo(s*1.1,s*0.05,s*1.1,-s*0.85,s*0.6,-s*0.95);
+                ctx.stroke();
+                ctx.strokeStyle='#04342c';ctx.lineWidth=s*0.22;
+                ctx.beginPath();
+                ctx.moveTo(-s*0.6,s*0.95);ctx.bezierCurveTo(-s*1.1,s*0.95,-s*1.1,s*0.05,0,s*0.05);ctx.bezierCurveTo(s*1.1,s*0.05,s*1.1,-s*0.85,s*0.6,-s*0.95);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            let tMain=0, tNav=0, tMob=0;
+
+            // Loading screen gem (large, 200px)
+            const gemMain=document.getElementById('gem-canvas');
+            function animMain(){requestAnimationFrame(animMain);drawGem(gemMain,86,tMain,0.4);tMain+=0.016;}
+            if(gemMain) animMain();
+
+            // Navbar gem (small, 42px, slower)
+            const gemNav=document.getElementById('nav-gem');
+            function animNav(){requestAnimationFrame(animNav);drawGem(gemNav,22,tNav,0.5,false);tNav+=0.016;}
+            if(gemNav) animNav();
+
+            // Mobile panel gem (36px)
+            const gemMob=document.getElementById('mob-gem');
+            function animMob(){requestAnimationFrame(animMob);drawGem(gemMob,19,tMob,0.5,false);tMob+=0.016;}
+            if(gemMob) animMob();
+        })();
+
     </script>
 </body>
 </html>
