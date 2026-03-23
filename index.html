@@ -315,7 +315,7 @@ to { opacity: 1; transform: translateY(0); }
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0;
             transition: transform 0.3s ease;
         }
 
@@ -1768,7 +1768,7 @@ to { opacity: 1; transform: translateY(0); }
 </head>
 <body>
         <div id="loading-overlay">
-        <canvas id="gem-canvas" width="200" height="200" style="position:relative;z-index:2;"></canvas>
+        <canvas id="gem-canvas" width="110" height="110" style="position:relative;z-index:2;"></canvas>
         <div class="loader-brand">
             <div class="loader-brand-name"><span class="leo">Leo</span><span class="mox">Mox</span></div>
             <div class="loader-brand-sub">IT Solutions</div>
@@ -1797,7 +1797,7 @@ to { opacity: 1; transform: translateY(0); }
     <header>
         <nav>
             <a href="#home" class="logo">
-                <canvas id="nav-gem" width="54" height="54" style="display:block;flex-shrink:0;"></canvas>
+                <canvas id="nav-gem" width="80" height="80" style="display:block;flex-shrink:0;"></canvas>
                 <div style="display: flex; flex-direction: column;">
                     <span style="font-size: 1.25rem; font-weight: 700;">
                         <span style="color: #4fd1c5;">Leo</span><span style="color: #2d3748;">Mox</span>
@@ -1850,7 +1850,7 @@ to { opacity: 1; transform: translateY(0); }
     <div class="mobile-nav-panel" id="mobilePanel">
         <div class="mobile-nav-header">
             <a href="#home" class="logo mobile-logo-link" style="text-decoration:none;display:flex;align-items:center;gap:0.6rem;">
-                <canvas id="mob-gem" width="48" height="48" style="display:block;"></canvas>
+                <canvas id="mob-gem" width="64" height="64" style="display:block;"></canvas>
                 <div>
                     <div style="font-size:1.1rem;font-weight:700;"><span style="color:#4fd1c5;">Leo</span><span style="color:#2d3748;">Mox</span></div>
                     <div style="font-size:0.6rem;color:#718096;letter-spacing:0.5px;">IT SOLUTIONS</div>
@@ -2506,7 +2506,7 @@ to { opacity: 1; transform: translateY(0); }
                 <h4>Contact Us</h4>
                 <ul>
                     <li style="color: #bdc3c7;">Besides Modal Dairy Store,<br>RS Furniture Building,<br>Kolanukonda, Mangalagiri,<br>Guntur, Andhra Pradesh</li>
-                    <li style="color: #bdc3c7; margin-top: 1rem;">📱 +91 95739 99700</li>
+                    <li style="color: #bdc3c7; margin-top: 1rem;">📱 +91 9491401514</li>
                     <li style="margin-top: 0.5rem;"><a href="/cdn-cgi/l/email-protection#3e575058517e525b51535146105750" style="color:#4fd1c5;text-decoration:none;">✉️ <span class="__cf_email__" data-cfemail="462f282029062a23292b293e682f28">[email&#160;protected]</span></a></li>
                 </ul>
             </div>
@@ -3315,7 +3315,7 @@ to { opacity: 1; transform: translateY(0); }
             const rows = inv.items.map(item=>`<tr><td>${item.desc}</td><td>${item.qty}</td><td>₹${item.rate}</td><td>₹${(item.qty*item.rate).toLocaleString()}</td></tr>`).join('');
             const w = window.open('','_blank');
             w.document.write(`<html><head><title>Invoice ${inv.id}</title><style>body{font-family:Arial;padding:30px;max-width:700px;margin:auto}h2{color:#38b2ac}.header{display:flex;justify-content:space-between;margin-bottom:20px}table{width:100%;border-collapse:collapse}th{background:#f0fafa;text-align:left;padding:10px}td{padding:10px;border-bottom:1px solid #eee}.total{text-align:right;font-size:1.3em;font-weight:bold;margin-top:15px;color:#2d3748}.badge{padding:4px 12px;border-radius:99px;font-size:0.85em;background:${inv.status==='Paid'?'#c6f6d5':'#feebc8'};color:${inv.status==='Paid'?'#276749':'#7b341e'}}button{background:#38b2ac;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;margin-top:20px}</style></head><body>
-            <div class="header"><div><h2>LeoMox IT Solutions</h2><p>info@leomox.in | +91 95739 99700<br>Kolanukonda, Mangalagiri, Guntur, AP</p></div>
+            <div class="header"><div><h2>LeoMox IT Solutions</h2><p>info@leomox.in | +91 9491401514<br>Kolanukonda, Mangalagiri, Guntur, AP</p></div>
             <div style="text-align:right"><h3>INVOICE</h3><p><b>${inv.id}</b><br>Date: ${inv.date}<br><span class="badge">${inv.status}</span></p></div></div>
             <p><b>Bill To:</b> ${inv.client}</p>
             <table><thead><tr><th>Description</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead><tbody>${rows}</tbody></table>
@@ -3332,7 +3332,7 @@ to { opacity: 1; transform: translateY(0); }
                 <div class="hrms-form-grid">
                     <div class="hrms-form-field"><label>Company Name</label><input value="LeoMox IT Solutions"></div>
                     <div class="hrms-form-field"><label>Email</label><input value="info@leomox.in"></div>
-                    <div class="hrms-form-field"><label>Phone</label><input value="+91 95739 99700"></div>
+                    <div class="hrms-form-field"><label>Phone</label><input value="+91 9491401514"></div>
                     <div class="hrms-form-field"><label>Address</label><input value="Kolanukonda, Mangalagiri, Guntur, AP"></div>
                 </div>
                 <button class="hrms-btn-primary" style="margin-top:1rem;" onclick="alert('Settings saved!')">💾 Save Settings</button>
@@ -3409,18 +3409,36 @@ to { opacity: 1; transform: translateY(0); }
                 ctx.globalAlpha=0.55;ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,gemR*0.45,0,Math.PI*2);ctx.fill();
                 ctx.restore();
 
-                // S symbol
+                // Lightning bolt symbol — sharp, tech-forward
                 ctx.save();ctx.translate(cx,cy);
-                const s=gemR*0.38;
-                ctx.globalAlpha=0.9;
-                ctx.strokeStyle='rgba(129,230,217,0.4)';ctx.lineWidth=s*0.45;ctx.lineCap='round';
+                const s=gemR*0.42;
+                // Glow layer
+                ctx.globalAlpha=0.35;
+                ctx.fillStyle='rgba(129,230,217,0.9)';
+                ctx.shadowColor='#81e6d9';ctx.shadowBlur=s*0.6;
                 ctx.beginPath();
-                ctx.moveTo(-s*0.6,s*0.95);ctx.bezierCurveTo(-s*1.1,s*0.95,-s*1.1,s*0.05,0,s*0.05);ctx.bezierCurveTo(s*1.1,s*0.05,s*1.1,-s*0.85,s*0.6,-s*0.95);
-                ctx.stroke();
-                ctx.strokeStyle='#04342c';ctx.lineWidth=s*0.22;
+                // Bolt path: top-right → mid-left → mid-right → bottom-left
+                ctx.moveTo(s*0.25,-s*1.0);
+                ctx.lineTo(-s*0.35, s*0.05);
+                ctx.lineTo(s*0.15, s*0.05);
+                ctx.lineTo(-s*0.25, s*1.0);
+                ctx.lineTo(s*0.5, -s*0.08);
+                ctx.lineTo(-s*0.08,-s*0.08);
+                ctx.closePath();
+                ctx.fill();
+                ctx.shadowBlur=0;
+                // Main dark bolt
+                ctx.globalAlpha=0.95;
+                ctx.fillStyle='#04342c';
                 ctx.beginPath();
-                ctx.moveTo(-s*0.6,s*0.95);ctx.bezierCurveTo(-s*1.1,s*0.95,-s*1.1,s*0.05,0,s*0.05);ctx.bezierCurveTo(s*1.1,s*0.05,s*1.1,-s*0.85,s*0.6,-s*0.95);
-                ctx.stroke();
+                ctx.moveTo(s*0.25,-s*1.0);
+                ctx.lineTo(-s*0.35, s*0.05);
+                ctx.lineTo(s*0.15, s*0.05);
+                ctx.lineTo(-s*0.25, s*1.0);
+                ctx.lineTo(s*0.5, -s*0.08);
+                ctx.lineTo(-s*0.08,-s*0.08);
+                ctx.closePath();
+                ctx.fill();
                 ctx.restore();
             }
 
@@ -3428,17 +3446,17 @@ to { opacity: 1; transform: translateY(0); }
 
             // Loading screen gem (large, 200px)
             const gemMain=document.getElementById('gem-canvas');
-            function animMain(){requestAnimationFrame(animMain);drawGem(gemMain,86,tMain,0.4);tMain+=0.016;}
+            function animMain(){requestAnimationFrame(animMain);drawGem(gemMain,44,tMain,0.4);tMain+=0.016;}
             if(gemMain) animMain();
 
             // Navbar gem (small, 42px, slower)
             const gemNav=document.getElementById('nav-gem');
-            function animNav(){requestAnimationFrame(animNav);drawGem(gemNav,22,tNav,0.5,false);tNav+=0.016;}
+            function animNav(){requestAnimationFrame(animNav);drawGem(gemNav,34,tNav,0.5,false);tNav+=0.016;}
             if(gemNav) animNav();
 
             // Mobile panel gem (36px)
             const gemMob=document.getElementById('mob-gem');
-            function animMob(){requestAnimationFrame(animMob);drawGem(gemMob,19,tMob,0.5,false);tMob+=0.016;}
+            function animMob(){requestAnimationFrame(animMob);drawGem(gemMob,26,tMob,0.5,false);tMob+=0.016;}
             if(gemMob) animMob();
         })();
 
