@@ -2734,12 +2734,71 @@ to { opacity: 1; transform: translateY(0); }
             });
         });
         // ── HRMS Data Store ───────────────────────────────────────────────
+
+        // ── Security Helpers ─────────────────────────────────────────────
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;')
+                .replace(/`/g, '&#x60;');
+        }
+
+        // Simple deterministic hash for client-side credential storage
+        // NOTE: This is NOT cryptographic-grade — use a real backend for production
+        function hashPwd(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const c = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + c;
+                hash |= 0;
+            }
+            return 'h_' + Math.abs(hash).toString(36) + str.length.toString(36);
+        }
+
+        // Session timeout: auto-logout after 30 minutes of inactivity
+        let sessionTimer;
+        function resetSessionTimer() {
+            clearTimeout(sessionTimer);
+            if (HRMS.currentUser) {
+                sessionTimer = setTimeout(() => {
+                    if (HRMS.currentUser) {
+                        HRMS.currentUser = null;
+                        alert('Session expired due to inactivity. Please login again.');
+                        showPage('login');
+                    }
+                }, 30 * 60 * 1000);
+            }
+        }
+        document.addEventListener('click', resetSessionTimer);
+        document.addEventListener('keydown', resetSessionTimer);
+
+        // Rate limiting for login attempts
+        const loginAttempts = { admin: 0, user: 0, lastReset: Date.now() };
+        function checkRateLimit(type) {
+            const now = Date.now();
+            if (now - loginAttempts.lastReset > 5 * 60 * 1000) {
+                loginAttempts.admin = 0;
+                loginAttempts.user = 0;
+                loginAttempts.lastReset = now;
+            }
+            if (loginAttempts[type] >= 5) {
+                alert('Too many failed attempts. Please wait 5 minutes before trying again.');
+                return false;
+            }
+            return true;
+        }
+
         // ── Default seed data ─────────────────────────────────────────────
+        // Passwords stored as hashed values — never in plaintext
         const DEFAULT_USERS = [
-            { id:'admin',   password:'leomox@123', role:'admin',    name:'Super Admin',  active:true },
-            { id:'manager1',password:'mgr@123',    role:'manager',  name:'Ravi Kumar',   active:true },
-            { id:'hr1',     password:'hr@123',     role:'hr',       name:'Priya Sharma', active:true },
-            { id:'emp1',    password:'emp@123',    role:'employee', name:'Arjun Reddy',  active:true }
+            { id:'admin',   password:hashPwd('leomox@123'), role:'admin',    name:'Super Admin',  active:true },
+            { id:'manager1',password:hashPwd('mgr@123'),    role:'manager',  name:'Ravi Kumar',   active:true },
+            { id:'hr1',     password:hashPwd('hr@123'),     role:'hr',       name:'Priya Sharma', active:true },
+            { id:'emp1',    password:hashPwd('emp@123'),    role:'employee', name:'Arjun Reddy',  active:true }
         ];
         const DEFAULT_EMPLOYEES = [
             { id:'EMP001', name:'Ravi Kumar',   dept:'Sales',   designation:'Manager',    phone:'9876543210', email:'ravi@leomox.in',  salary:45000, joined:'2022-01-15', status:'Active' },
@@ -2812,13 +2871,16 @@ to { opacity: 1; transform: translateY(0); }
 
         // ── Auth ──────────────────────────────────────────────────────────
         function adminLogin() {
+            if (!checkRateLimit('admin')) return;
             const uid = document.querySelector('#adminFields input[type="text"]').value.trim();
             const pwd = document.getElementById('adminPass').value.trim();
             if (!uid || !pwd) { alert('Please enter User ID and Password.'); return; }
-            const user = HRMS.users.find(u => u.id === uid && u.password === pwd);
-            if (!user) { alert('Invalid credentials. Please try again.'); return; }
+            const user = HRMS.users.find(u => u.id === uid && u.password === hashPwd(pwd));
+            if (!user) { loginAttempts.admin++; alert('Invalid credentials. Please try again. (' + (5-loginAttempts.admin) + ' attempts left)'); return; }
             if (!user.active) { alert('This account has been disabled. Contact admin.'); return; }
+            loginAttempts.admin = 0;
             HRMS.currentUser = user;
+            resetSessionTimer();
             HRMS.activeModule = 'dashboard';
             closeLoginCard('adminCard','adminFields');
             document.querySelector('#adminFields input[type="text"]').value = '';
@@ -2827,13 +2889,16 @@ to { opacity: 1; transform: translateY(0); }
         }
 
         function userLogin() {
+            if (!checkRateLimit('user')) return;
             const uid = document.querySelector('#userFields input[type="text"]').value.trim();
             const pwd = document.getElementById('userPass').value.trim();
             if (!uid || !pwd) { alert('Please enter User ID and Password.'); return; }
-            const user = HRMS.users.find(u => u.id === uid && u.password === pwd);
-            if (!user) { alert('Invalid credentials. Please try again.'); return; }
+            const user = HRMS.users.find(u => u.id === uid && u.password === hashPwd(pwd));
+            if (!user) { loginAttempts.user++; alert('Invalid credentials. Please try again. (' + (5-loginAttempts.user) + ' attempts left)'); return; }
             if (!user.active) { alert('This account has been disabled.'); return; }
+            loginAttempts.user = 0;
             HRMS.currentUser = user;
+            resetSessionTimer();
             HRMS.activeModule = 'dashboard';
             closeLoginCard('userCard','userFields');
             document.querySelector('#userFields input[type="text"]').value = '';
@@ -2873,6 +2938,9 @@ to { opacity: 1; transform: translateY(0); }
             if (!app) return;
             const u = HRMS.currentUser;
             if (!u) { showPage('login'); return; }
+            // Re-validate user still exists and is active
+            const validUser = HRMS.users.find(x => x.id === u.id && x.active);
+            if (!validUser) { HRMS.currentUser = null; showPage('login'); return; }
             const role = HRMS.roles[u.role];
             const perms = role.permissions;
 
@@ -2962,11 +3030,11 @@ to { opacity: 1; transform: translateY(0); }
             <div class="hrms-dash-grid">
                 <div class="hrms-card">
                     <h4>Recent Employees</h4>
-                    ${HRMS.employees.slice(0,3).map(e=>`<div class="hrms-list-row"><span class="hrms-avatar">${e.name.charAt(0)}</span><div><b>${e.name}</b><br><small>${e.designation} · ${e.dept}</small></div><span class="hrms-badge">${e.status}</span></div>`).join('')}
+                    ${HRMS.employees.slice(0,3).map(e=>`<div class="hrms-list-row"><span class="hrms-avatar">${escapeHTML(e.name.charAt(0))}</span><div><b>${escapeHTML(e.name)}</b><br><small>${escapeHTML(e.designation)} · ${escapeHTML(e.dept)}</small></div><span class="hrms-badge">${e.status}</span></div>`).join('')}
                 </div>
                 <div class="hrms-card">
                     <h4>Recent Invoices</h4>
-                    ${HRMS.invoices.slice(0,3).map(i=>`<div class="hrms-list-row"><span style="font-size:1.4rem;">🧾</span><div><b>${i.id}</b><br><small>${i.client}</small></div><span class="hrms-badge ${i.status==='Paid'?'paid':'pending'}">₹${i.amount.toLocaleString()}</span></div>`).join('')}
+                    ${HRMS.invoices.slice(0,3).map(i=>`<div class="hrms-list-row"><span style="font-size:1.4rem;">🧾</span><div><b>${escapeHTML(i.id)}</b><br><small>${escapeHTML(i.client)}</small></div><span class="hrms-badge ${i.status==='Paid'?'paid':'pending'}">₹${i.amount.toLocaleString()}</span></div>`).join('')}
                 </div>
             </div>`;
         }
@@ -2984,11 +3052,11 @@ to { opacity: 1; transform: translateY(0); }
                     <thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Designation</th><th>Phone</th><th>Salary</th><th>Status</th>${isAdmin?'<th>Actions</th>':''}</tr></thead>
                     <tbody>${HRMS.employees.map(e=>`
                         <tr>
-                            <td>${e.id}</td>
-                            <td><span class="hrms-avatar sm">${e.name.charAt(0)}</span> ${e.name}</td>
-                            <td>${e.dept}</td>
-                            <td>${e.designation}</td>
-                            <td>${e.phone}</td>
+                            <td>${escapeHTML(e.id)}</td>
+                            <td><span class="hrms-avatar sm">${escapeHTML(e.name.charAt(0))}</span> ${escapeHTML(e.name)}</td>
+                            <td>${escapeHTML(e.dept)}</td>
+                            <td>${escapeHTML(e.designation)}</td>
+                            <td>${escapeHTML(e.phone)}</td>
                             <td>₹${e.salary.toLocaleString()}</td>
                             <td><span class="hrms-badge ${e.status==='Active'?'paid':'pending'}">${e.status}</span></td>
                             ${isAdmin?`<td><button class="hrms-btn-sm" onclick="editEmployee('${e.id}')">✏️</button> <button class="hrms-btn-sm danger" onclick="deleteEmployee('${e.id}')">🗑️</button></td>`:''}
@@ -3066,8 +3134,8 @@ to { opacity: 1; transform: translateY(0); }
                     <tbody>${HRMS.users.map(u=>{
                         const r = HRMS.roles[u.role];
                         return `<tr>
-                            <td><code>${u.id}</code></td>
-                            <td>${u.name}</td>
+                            <td><code>${escapeHTML(u.id)}</code></td>
+                            <td>${escapeHTML(u.name)}</td>
                             <td><span class="hrms-role-badge" style="background:${r.color}22;color:${r.color}">${r.label}</span></td>
                             <td><div class="hrms-perm-tags">${r.permissions.map(p=>`<span class="hrms-perm-tag">${p}</span>`).join('')}</div></td>
                             <td><span class="hrms-badge ${u.active?'paid':'pending'}">${u.active?'Active':'Disabled'}</span></td>
@@ -3125,7 +3193,7 @@ to { opacity: 1; transform: translateY(0); }
                 const uArr2 = HRMS.users;
                 const u = uArr2.find(x=>x.id===id);
                 u.name=name; u.role=role;
-                if (pwd) u.password=pwd;
+                if (pwd) u.password=hashPwd(pwd);
                 HRMS.users = uArr2;
             } else {
                 if (!pwd) { alert('Password is required for new users'); return; }
@@ -3235,8 +3303,8 @@ to { opacity: 1; transform: translateY(0); }
                     <thead><tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody>${HRMS.invoices.map(i=>`
                     <tr>
-                        <td><b>${i.id}</b></td>
-                        <td>${i.client}</td>
+                        <td><b>${escapeHTML(i.id)}</b></td>
+                        <td>${escapeHTML(i.client)}</td>
                         <td>₹${i.amount.toLocaleString()}</td>
                         <td>${i.date}</td>
                         <td><span class="hrms-badge ${i.status==='Paid'?'paid':'pending'}">${i.status}</span></td>
