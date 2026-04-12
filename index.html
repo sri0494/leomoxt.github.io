@@ -1769,6 +1769,145 @@ to { opacity: 1; transform: translateY(0); }
             caret-color: #4fd1c5 !important;
         }
 
+        /* ── Forgot Modal ── */
+        .login-forgot-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: -0.3rem;
+        }
+        .forgot-link {
+            background: none;
+            border: none;
+            color: #4fd1c5;
+            font-size: 0.78rem;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            padding: 0;
+            text-decoration: underline;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+        }
+        .forgot-link:hover { opacity: 1; }
+        .forgot-modal {
+            background: linear-gradient(135deg, #0f3d3e, #1a4d4d);
+            border: 1px solid rgba(79,209,197,0.3);
+            border-radius: 20px;
+            padding: 2.2rem 2rem;
+            width: min(460px, 92vw);
+            position: relative;
+            animation: forgotIn 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
+        @keyframes forgotIn {
+            from { opacity:0; transform:scale(0.88) translateY(20px); }
+            to   { opacity:1; transform:scale(1) translateY(0); }
+        }
+        .forgot-modal-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: #bdc3c7;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .forgot-modal-close:hover { background: rgba(252,129,129,0.2); color: #fc8181; }
+        .forgot-modal h3 {
+            color: #4fd1c5;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+        .forgot-modal p {
+            color: #9aa5b4;
+            font-size: 0.88rem;
+            margin-bottom: 1.3rem;
+            line-height: 1.5;
+        }
+        .forgot-field { margin-bottom: 1rem; }
+        .forgot-field label {
+            display: block;
+            font-size: 0.82rem;
+            color: #bdc3c7;
+            margin-bottom: 0.35rem;
+            font-weight: 500;
+        }
+        .forgot-field input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(79,209,197,0.35);
+            background: #ffffff;
+            color: #1a1a1a !important;
+            -webkit-text-fill-color: #1a1a1a !important;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.92rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .forgot-field input:focus { border-color: rgba(79,209,197,0.7); box-shadow: 0 0 0 3px rgba(79,209,197,0.12); }
+        .forgot-btn-row { display: flex; gap: 0.75rem; margin-top: 1.2rem; }
+        .forgot-submit-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 10px;
+            background: linear-gradient(135deg,#4fd1c5,#38b2ac);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.92rem;
+            border: none;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            transition: transform 0.2s;
+        }
+        .forgot-submit-btn:hover { transform: translateY(-1px); }
+        .forgot-back-btn {
+            padding: 0.75rem 1.2rem;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.07);
+            color: #bdc3c7;
+            border: 1px solid rgba(255,255,255,0.12);
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+        }
+        .forgot-result-box {
+            background: rgba(79,209,197,0.1);
+            border: 1px solid rgba(79,209,197,0.3);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .forgot-result-box b { color: #4fd1c5; }
+        .forgot-error-box {
+            background: rgba(252,129,129,0.1);
+            border: 1px solid rgba(252,129,129,0.3);
+            border-radius: 12px;
+            padding: 0.85rem 1.1rem;
+            color: #fc8181;
+            font-size: 0.88rem;
+            margin: 0.75rem 0;
+        }
+        .forgot-success-icon { font-size: 3rem; text-align: center; margin-bottom: 0.75rem; }
+        .forgot-step-indicator {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 1.5rem;
+        }
+        .forgot-step-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(79,209,197,0.25);
+            transition: background 0.3s;
+        }
+        .forgot-step-dot.active { background: #4fd1c5; }
+
     </style>
 </head>
 <body>
@@ -1802,12 +1941,12 @@ to { opacity: 1; transform: translateY(0); }
     <header>
         <nav>
             <a href="#home" class="logo">
-                <canvas id="nav-gem" width="80" height="80" style="display:block;flex-shrink:0;"></canvas>
+                <canvas id="nav-gem" width="75" height="75" style="display:block;flex-shrink:0;margin-right:-6px;"></canvas>
                 <div style="display: flex; flex-direction: column;">
-                    <span style="font-size: 1.25rem; font-weight: 700;">
+                    <span style="font-size: 1.35rem; font-weight: 800; letter-spacing:0.5px;">
                         <span style="color: #4fd1c5;">Leo</span><span style="color: #2d3748;">Mox</span>
                     </span>
-                    <span style="font-size: 0.7rem; font-weight: 400; color: #718096; letter-spacing: 0.5px;">IT SOLUTIONS</span>
+                    <span style="font-size: 0.68rem; font-weight: 500; color: #718096; letter-spacing: 1.5px;">IT SOLUTIONS</span>
                 </div>
             </a>
             <button class="hamburger" id="hamburger" aria-label="Toggle menu">
@@ -2426,6 +2565,10 @@ to { opacity: 1; transform: translateY(0); }
                                 </div>
                             </div>
                             <button class="login-btn admin-btn" onclick="adminLogin()">Login as Admin →</button>
+                            <div class="login-forgot-row">
+                                <button class="forgot-link" onclick="openForgot('admin','id')">Forgot User ID?</button>
+                                <button class="forgot-link" onclick="openForgot('admin','password')">Forgot Password?</button>
+                            </div>
                             <button class="login-back-btn" onclick="closeLoginCard('adminCard','adminFields')">← Back</button>
                         </div>
                         <button class="login-open-btn admin-open-btn" id="adminOpenBtn" onclick="openLoginCard('adminCard','adminFields','adminOpenBtn')">
@@ -2451,6 +2594,10 @@ to { opacity: 1; transform: translateY(0); }
                                 </div>
                             </div>
                             <button class="login-btn user-btn" onclick="userLogin()">Login as User →</button>
+                            <div class="login-forgot-row">
+                                <button class="forgot-link" onclick="openForgot('user','id')">Forgot User ID?</button>
+                                <button class="forgot-link" onclick="openForgot('user','password')">Forgot Password?</button>
+                            </div>
                             <button class="login-back-btn" onclick="closeLoginCard('userCard','userFields')">← Back</button>
                         </div>
                         <button class="login-open-btn user-open-btn" id="userOpenBtn" onclick="openLoginCard('userCard','userFields','userOpenBtn')">
@@ -2472,6 +2619,16 @@ to { opacity: 1; transform: translateY(0); }
             <!-- Rendered by JS -->
         </div>
     </section>
+
+    <!-- Forgot Modal -->
+    <div id="forgotOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99997;align-items:center;justify-content:center;">
+        <div class="forgot-modal" id="forgotModal">
+            <button class="forgot-modal-close" onclick="closeForgot()">✕</button>
+            <div id="forgotStep1"><!-- step 1 content injected by JS --></div>
+            <div id="forgotStep2" style="display:none;"><!-- step 2 content injected by JS --></div>
+            <div id="forgotStep3" style="display:none;"><!-- success --></div>
+        </div>
+    </div>
 
     <footer id="contact" style="display:block !important;">
         <div class="footer-content">
@@ -2501,7 +2658,7 @@ to { opacity: 1; transform: translateY(0); }
                 <ul>
                     <li style="color: #bdc3c7;">Besides Modal Dairy Store,<br>RS Furniture Building,<br>Kolanukonda, Mangalagiri,<br>Guntur, Andhra Pradesh</li>
                     <li style="color: #bdc3c7; margin-top: 1rem;">📱 +91 9491401514</li>
-                    <li style="margin-top: 0.5rem;"><a href="/cdn-cgi/l/email-protection#3e575058517e525b51535146105750" style="color:#4fd1c5;text-decoration:none;">✉️ <span class="__cf_email__" data-cfemail="462f282029062a23292b293e682f28">[email&#160;protected]</span></a></li>
+                    <li style="margin-top: 0.5rem;"><a href="mailto:info@leomox.in" style="color:#4fd1c5;text-decoration:none;">✉️ info@leomox.in</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -2563,6 +2720,25 @@ to { opacity: 1; transform: translateY(0); }
                 s.classList.remove('active');
             });
 
+            const isHRMS = (targetId === 'hrms');
+            const siteHeader = document.querySelector('header');
+            const siteFooter = document.getElementById('contact');
+            const mobilePanel = document.getElementById('mobilePanel');
+            const mobileOverlay = document.getElementById('mobileOverlay');
+
+            if (isHRMS) {
+                // Hide nav and footer for full HRMS experience
+                if (siteHeader) siteHeader.style.display = 'none';
+                if (siteFooter) siteFooter.style.display = 'none';
+                document.body.style.paddingTop = '0';
+            } else {
+                // Restore nav and footer
+                if (siteHeader) siteHeader.style.display = '';
+                if (siteFooter) siteFooter.style.display = '';
+                document.body.style.paddingTop = '';
+                closeMenu();
+            }
+
             const isHome = (targetId === 'home' || targetId === '' || targetId === null);
 
             if (isHome) {
@@ -2573,11 +2749,8 @@ to { opacity: 1; transform: translateY(0); }
                     if (el) el.classList.add('active');
                 });
             } else if (targetId === 'contact') {
-                // Show the footer by scrolling to it — keep current page visible
-                // Re-show whichever section was active, or just scroll to footer
                 const footer = document.getElementById('contact');
                 if (footer) {
-                    // Show the contact/login section as the page, then scroll to footer
                     const loginEl = document.getElementById('login');
                     if (loginEl) {
                         loginEl.classList.add('active');
@@ -2689,9 +2862,12 @@ to { opacity: 1; transform: translateY(0); }
             document.body.style.overflow = 'hidden';
         }
         function closeMenu() {
-            hamburger.classList.remove('open');
-            mobilePanel.classList.remove('open');
-            mobileOverlay.classList.remove('open');
+            const hb = document.getElementById('hamburger');
+            const mp = document.getElementById('mobilePanel');
+            const mo = document.getElementById('mobileOverlay');
+            if (hb) hb.classList.remove('open');
+            if (mp) mp.classList.remove('open');
+            if (mo) mo.classList.remove('open');
             document.body.style.overflow = '';
         }
 
@@ -3513,7 +3689,7 @@ to { opacity: 1; transform: translateY(0); }
 
             // Navbar gem (small, 42px, slower)
             const gemNav=document.getElementById('nav-gem');
-            function animNav(){requestAnimationFrame(animNav);drawGem(gemNav,34,tNav,0.5,false);tNav+=0.016;}
+            function animNav(){requestAnimationFrame(animNav);drawGem(gemNav,32,tNav,0.5,false);tNav+=0.016;}
             if(gemNav) animNav();
 
             // Footer gem (60px)
@@ -3525,6 +3701,188 @@ to { opacity: 1; transform: translateY(0); }
             function animMob(){requestAnimationFrame(animMob);drawGem(gemMob,26,tMob,0.5,false);tMob+=0.016;}
             if(gemMob) animMob();
         })();
+
+        // ── Forgot User ID / Password ─────────────────────────────────────
+        let forgotCtx = { type: null, mode: null }; // type: admin|user, mode: id|password
+
+        function openForgot(type, mode) {
+            forgotCtx = { type, mode };
+            const overlay = document.getElementById('forgotOverlay');
+            overlay.style.display = 'flex';
+            document.getElementById('forgotStep2').style.display = 'none';
+            document.getElementById('forgotStep3').style.display = 'none';
+            renderForgotStep1();
+        }
+
+        function closeForgot() {
+            document.getElementById('forgotOverlay').style.display = 'none';
+        }
+        // Close on overlay click
+        document.getElementById('forgotOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeForgot();
+        });
+
+        function renderForgotStep1() {
+            const { type, mode } = forgotCtx;
+            const roleLabel = type === 'admin' ? 'Admin' : 'User';
+            const s1 = document.getElementById('forgotStep1');
+            s1.style.display = 'block';
+
+            if (mode === 'id') {
+                s1.innerHTML = `
+                    <div class="forgot-step-indicator">
+                        <div class="forgot-step-dot active"></div>
+                        <div class="forgot-step-dot"></div>
+                    </div>
+                    <h3>🔍 Forgot ${roleLabel} ID</h3>
+                    <p>Enter your registered full name and we'll show your User ID.</p>
+                    <div class="forgot-field">
+                        <label>Full Name</label>
+                        <input type="text" id="forgot_name" placeholder="Enter your full name">
+                    </div>
+                    <div id="forgotMsg1"></div>
+                    <div class="forgot-btn-row">
+                        <button class="forgot-submit-btn" onclick="lookupUserId()">Find My ID →</button>
+                        <button class="forgot-back-btn" onclick="closeForgot()">Cancel</button>
+                    </div>`;
+            } else {
+                s1.innerHTML = `
+                    <div class="forgot-step-indicator">
+                        <div class="forgot-step-dot active"></div>
+                        <div class="forgot-step-dot"></div>
+                        <div class="forgot-step-dot"></div>
+                    </div>
+                    <h3>🔑 Reset ${roleLabel} Password</h3>
+                    <p>Enter your User ID. If found, you can set a new password.</p>
+                    <div class="forgot-field">
+                        <label>User ID</label>
+                        <input type="text" id="forgot_uid" placeholder="Enter your user ID">
+                    </div>
+                    <div id="forgotMsg1"></div>
+                    <div class="forgot-btn-row">
+                        <button class="forgot-submit-btn" onclick="lookupUserForReset()">Continue →</button>
+                        <button class="forgot-back-btn" onclick="closeForgot()">Cancel</button>
+                    </div>`;
+            }
+        }
+
+        function maskId(id) {
+            if (id.length <= 2) return id;
+            return id[0] + '*'.repeat(id.length - 2) + id[id.length - 1];
+        }
+
+        function lookupUserId() {
+            const name = document.getElementById('forgot_name').value.trim().toLowerCase();
+            if (!name) { document.getElementById('forgotMsg1').innerHTML = '<div class="forgot-error-box">Please enter your full name.</div>'; return; }
+            const matches = HRMS.users.filter(u => u.name.toLowerCase().includes(name));
+            const s1 = document.getElementById('forgotStep1');
+            const s2 = document.getElementById('forgotStep2');
+            if (!matches.length) {
+                document.getElementById('forgotMsg1').innerHTML = '<div class="forgot-error-box">No account found with that name. Contact your admin.</div>';
+                return;
+            }
+            // Show step 2 with masked ID
+            s1.style.display = 'none';
+            s2.style.display = 'block';
+            s2.innerHTML = `
+                <div class="forgot-step-indicator">
+                    <div class="forgot-step-dot"></div>
+                    <div class="forgot-step-dot active"></div>
+                </div>
+                <h3>✅ Account Found</h3>
+                <p>We found ${matches.length} account(s) matching your name.</p>
+                ${matches.map(u => `
+                <div class="forgot-result-box">
+                    <b>Name:</b> ${escapeHTML(u.name)}<br>
+                    <b>User ID:</b> ${escapeHTML(maskId(u.id))}<br>
+                    <b>Role:</b> ${escapeHTML(HRMS.roles[u.role]?.label || u.role)}
+                </div>`).join('')}
+                <p style="font-size:0.8rem;color:#718096;margin-top:0.5rem;">For full credentials, contact your system administrator.</p>
+                <button class="forgot-submit-btn" onclick="closeForgot()" style="margin-top:0.5rem;">Done ✓</button>`;
+        }
+
+        function lookupUserForReset() {
+            const uid = document.getElementById('forgot_uid').value.trim();
+            if (!uid) { document.getElementById('forgotMsg1').innerHTML = '<div class="forgot-error-box">Please enter your User ID.</div>'; return; }
+            const user = HRMS.users.find(u => u.id === uid);
+            if (!user) {
+                document.getElementById('forgotMsg1').innerHTML = '<div class="forgot-error-box">User ID not found. Check the ID or contact your admin.</div>';
+                return;
+            }
+            if (!user.active) {
+                document.getElementById('forgotMsg1').innerHTML = '<div class="forgot-error-box">This account is disabled. Contact your administrator.</div>';
+                return;
+            }
+            // Step 2 — set new password
+            forgotCtx.uid = uid;
+            const s1 = document.getElementById('forgotStep1');
+            const s2 = document.getElementById('forgotStep2');
+            s1.style.display = 'none';
+            s2.style.display = 'block';
+            s2.innerHTML = `
+                <div class="forgot-step-indicator">
+                    <div class="forgot-step-dot"></div>
+                    <div class="forgot-step-dot active"></div>
+                    <div class="forgot-step-dot"></div>
+                </div>
+                <h3>🔒 Set New Password</h3>
+                <p>Account found: <b style="color:#4fd1c5;">${escapeHTML(user.name)}</b>. Enter and confirm your new password.</p>
+                <div class="forgot-field">
+                    <label>New Password</label>
+                    <div class="password-wrap">
+                        <input type="password" id="forgot_newpwd" placeholder="Minimum 6 characters" style="background:#fff;color:#1a1a1a !important;-webkit-text-fill-color:#1a1a1a !important;">
+                        <button class="toggle-pass" onclick="togglePass('forgot_newpwd',this)">👁</button>
+                    </div>
+                </div>
+                <div class="forgot-field">
+                    <label>Confirm Password</label>
+                    <div class="password-wrap">
+                        <input type="password" id="forgot_confirmpwd" placeholder="Re-enter new password" style="background:#fff;color:#1a1a1a !important;-webkit-text-fill-color:#1a1a1a !important;">
+                        <button class="toggle-pass" onclick="togglePass('forgot_confirmpwd',this)">👁</button>
+                    </div>
+                </div>
+                <div id="forgotMsg2"></div>
+                <div class="forgot-btn-row">
+                    <button class="forgot-submit-btn" onclick="resetPassword()">Reset Password →</button>
+                    <button class="forgot-back-btn" onclick="backToStep1()">← Back</button>
+                </div>`;
+        }
+
+        function backToStep1() {
+            document.getElementById('forgotStep2').style.display = 'none';
+            document.getElementById('forgotStep1').style.display = 'block';
+        }
+
+        function resetPassword() {
+            const newpwd = document.getElementById('forgot_newpwd').value;
+            const confirm = document.getElementById('forgot_confirmpwd').value;
+            const msg = document.getElementById('forgotMsg2');
+            if (newpwd.length < 6) { msg.innerHTML = '<div class="forgot-error-box">Password must be at least 6 characters.</div>'; return; }
+            if (newpwd !== confirm) { msg.innerHTML = '<div class="forgot-error-box">Passwords do not match. Please try again.</div>'; return; }
+            // Update password
+            const uArr = HRMS.users;
+            const u = uArr.find(x => x.id === forgotCtx.uid);
+            if (!u) { msg.innerHTML = '<div class="forgot-error-box">User not found. Please try again.</div>'; return; }
+            u.password = hashPwd(newpwd);
+            HRMS.users = uArr;
+            saveHRMS();
+            // Step 3 — success
+            document.getElementById('forgotStep2').style.display = 'none';
+            const s3 = document.getElementById('forgotStep3');
+            s3.style.display = 'block';
+            s3.innerHTML = `
+                <div class="forgot-success-icon">✅</div>
+                <h3 style="text-align:center;color:#48bb78;">Password Reset!</h3>
+                <p style="text-align:center;">Your password has been updated successfully. You can now log in with your new password.</p>
+                <button class="forgot-submit-btn" onclick="closeForgot()" style="margin-top:1rem;">Back to Login →</button>`;
+        }
+
+        window.openForgot = openForgot;
+        window.closeForgot = closeForgot;
+        window.lookupUserId = lookupUserId;
+        window.lookupUserForReset = lookupUserForReset;
+        window.resetPassword = resetPassword;
+        window.backToStep1 = backToStep1;
 
     </script>
 </body>
