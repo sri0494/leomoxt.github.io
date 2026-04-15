@@ -2999,6 +2999,22 @@ to { opacity: 1; transform: translateY(0); }
             }
         };
 
+        // ── Migrate old plaintext passwords to hashed ─────────────────────
+        (function migratePasswords() {
+            try {
+                const stored = LS.get('users', null);
+                if (!stored) return;
+                let changed = false;
+                stored.forEach(u => {
+                    if (u.password && !u.password.startsWith('h_')) {
+                        u.password = hashPwd(u.password);
+                        changed = true;
+                    }
+                });
+                if (changed) LS.set('users', stored);
+            } catch(e) {}
+        })();
+
         // ── HRMS data — loads from localStorage, falls back to defaults ───
         const HRMS = {
             currentUser: null,
@@ -3052,7 +3068,7 @@ to { opacity: 1; transform: translateY(0); }
             const pwd = document.getElementById('adminPass').value.trim();
             if (!uid || !pwd) { alert('Please enter User ID and Password.'); return; }
             const user = HRMS.users.find(u => u.id === uid && u.password === hashPwd(pwd));
-            if (!user) { loginAttempts.admin++; alert('Invalid credentials. Please try again. (' + (5-loginAttempts.admin) + ' attempts left)'); return; }
+            if (!user) { loginAttempts.admin++; alert('Invalid User ID or Password. (' + (5-loginAttempts.admin) + ' attempts left)\n\nDefault: admin / leomox@123'); return; }
             if (!user.active) { alert('This account has been disabled. Contact admin.'); return; }
             loginAttempts.admin = 0;
             HRMS.currentUser = user;
@@ -3450,22 +3466,160 @@ to { opacity: 1; transform: translateY(0); }
             </div>`;
         }
 
+        // ── Doc opener (Blob URL — avoids popup blocker) ─────────────────
+        function openDoc(htmlStr, filename) {
+            try {
+                var blob = new Blob([htmlStr], {type:'text/html'});
+                var url  = URL.createObjectURL(blob);
+                var win  = window.open(url, '_blank');
+                if (!win) {
+                    var a = document.createElement('a');
+                    a.href = url; a.download = filename; a.click();
+                }
+                setTimeout(function(){ URL.revokeObjectURL(url); }, 10000);
+            } catch(err) {
+                console.error('openDoc error:', err);
+                alert('Could not open document. Please allow popups for this site.');
+            }
+        }
+        window.openDoc = openDoc;
+
         function genPayslip(id) {
-            const e = HRMS.employees.find(x=>x.id===id);
-            const allowance = Math.round(e.salary * 0.20);
-            const deduction = Math.round(e.salary * 0.12);
-            const net = e.salary + allowance - deduction;
-            const w = window.open('','_blank');
-            w.document.write(`<html><head><title>Payslip - ${e.name}</title><style>body{font-family:Arial;padding:30px;max-width:600px;margin:auto}h2{color:#38b2ac}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee}.total{font-weight:bold;font-size:1.2em;color:#2d3748}button{background:#38b2ac;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;margin-top:20px}</style></head><body>
-            <h2>LeoMox IT Solutions - Payslip</h2>
-            <p><b>Employee:</b> ${e.name} | <b>ID:</b> ${e.id} | <b>Dept:</b> ${e.dept}</p>
-            <div class="row"><span>Basic Salary</span><span>₹${e.salary.toLocaleString()}</span></div>
-            <div class="row"><span>HRA & Allowances</span><span style="color:green">+₹${allowance.toLocaleString()}</span></div>
-            <div class="row"><span>PF & Deductions</span><span style="color:red">-₹${deduction.toLocaleString()}</span></div>
-            <div class="row total"><span>Net Pay</span><span>₹${net.toLocaleString()}</span></div>
-            <button onclick="window.print()">🖨️ Print Payslip</button></body></html>`);
+            var e = HRMS.employees.find(function(x){return x.id===id;});
+            var basic    = e.salary;
+            var hra      = Math.round(basic * 0.40);
+            var convey   = Math.round(basic * 0.05);
+            var medical  = Math.round(basic * 0.03);
+            var special  = Math.round(basic * 0.10);
+            var lta      = Math.round(basic * 0.05);
+            var grossEarn= basic + hra + convey + medical + special + lta;
+            var pf       = Math.round(basic * 0.12);
+            var profTax  = 200;
+            var incomeTax= Math.round(basic * 0.05);
+            var totalDed = pf + profTax + incomeTax;
+            var netPay   = grossEarn - totalDed;
+            var now      = new Date();
+            var month    = now.toLocaleString('default',{month:'long',year:'numeric'});
+            var daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+
+            var doc = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Payslip - ' + e.name + '</title>'
+              + '<style>'
+              + '*{box-sizing:border-box;margin:0;padding:0}'
+              + 'body{font-family:Arial,sans-serif;font-size:11px;color:#222;background:#fff;padding:24px;max-width:780px;margin:auto}'
+              + '.hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #1a6b6b;padding-bottom:12px;margin-bottom:12px}'
+              + '.hdr-left h1{font-size:20px;color:#1a6b6b;letter-spacing:1px}'
+              + '.hdr-left p{color:#555;font-size:10px;margin-top:2px}'
+              + '.hdr-right{text-align:right}'
+              + '.badge{background:#1a6b6b;color:#fff;padding:4px 14px;border-radius:4px;font-size:11px;font-weight:bold;letter-spacing:1px}'
+              + '.slip-title{background:#1a6b6b;color:#fff;text-align:center;padding:5px;font-size:13px;font-weight:bold;letter-spacing:2px;margin-bottom:10px}'
+              + '.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid #bbb;margin-bottom:10px}'
+              + '.info-section{border-right:1px solid #bbb}'
+              + '.info-section:last-child{border-right:none}'
+              + '.info-head{background:#d4edec;padding:5px 8px;font-weight:bold;color:#1a6b6b;font-size:10px;border-bottom:1px solid #bbb}'
+              + '.info-row{display:flex;padding:3px 8px;border-bottom:1px solid #eee}'
+              + '.info-label{color:#555;width:45%;font-size:10px}'
+              + '.info-val{font-weight:bold;font-size:10px;flex:1}'
+              + '.earn-ded{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #bbb;margin-bottom:10px}'
+              + '.earn-col,.ded-col{border-right:1px solid #bbb}'
+              + '.ded-col{border-right:none}'
+              + '.col-head{background:#1a6b6b;color:#fff;display:grid;grid-template-columns:1fr auto;padding:5px 8px;font-weight:bold;font-size:10px}'
+              + '.col-row{display:grid;grid-template-columns:1fr auto;padding:3px 8px;border-bottom:1px solid #eee;font-size:10px}'
+              + '.col-row.total-row{background:#d4edec;font-weight:bold;border-top:2px solid #1a6b6b}'
+              + '.net-bar{display:flex;justify-content:space-between;align-items:center;background:#1a6b6b;color:#fff;padding:10px 16px;margin-bottom:10px;border-radius:4px}'
+              + '.net-label{font-size:13px;font-weight:bold;letter-spacing:1px}'
+              + '.net-amt{font-size:20px;font-weight:bold;letter-spacing:1px}'
+              + '.net-words{background:#f0fafa;border:1px solid #bbb;padding:6px 10px;font-size:10px;margin-bottom:14px;border-radius:3px}'
+              + '.footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:10px;border-top:2px solid #1a6b6b;padding-top:14px}'
+              + '.sig-line{border-top:1px solid #555;margin-top:30px;padding-top:4px;font-size:10px;color:#555;text-align:center}'
+              + '.note{font-size:9px;color:#888;text-align:center;margin-top:12px;font-style:italic}'
+              + '@media print{body{padding:0} button{display:none}}'
+              + '</style></head><body>'
+
+              + '<div class="hdr">'
+              + '<div class="hdr-left"><h1>LeoMox IT Solutions</h1>'
+              + '<p>Kolanukonda, Mangalagiri, Guntur, Andhra Pradesh<br>info@leomox.in | +91 9491401514</p></div>'
+              + '<div class="hdr-right"><div class="badge">SALARY SLIP</div>'
+              + '<p style="margin-top:6px;font-size:10px;color:#555">Pay Period: <b>' + month + '</b></p>'
+              + '<p style="font-size:10px;color:#555">Days in Month: <b>' + daysInMonth + '</b> &nbsp; Days Paid: <b>' + daysInMonth + '</b></p>'
+              + '</div></div>'
+
+              + '<div class="info-grid">'
+              + '<div class="info-section"><div class="info-head">Employee Details</div>'
+              + '<div class="info-row"><span class="info-label">Emp ID</span><span class="info-val">' + e.id + '</span></div>'
+              + '<div class="info-row"><span class="info-label">Name</span><span class="info-val">' + e.name + '</span></div>'
+              + '<div class="info-row"><span class="info-label">Designation</span><span class="info-val">' + e.designation + '</span></div>'
+              + '<div class="info-row"><span class="info-label">Department</span><span class="info-val">' + e.dept + '</span></div>'
+              + '<div class="info-row"><span class="info-label">Joined</span><span class="info-val">' + (e.joined||'---') + '</span></div></div>'
+
+              + '<div class="info-section"><div class="info-head">Payment Details</div>'
+              + '<div class="info-row"><span class="info-label">Bank</span><span class="info-val">---</span></div>'
+              + '<div class="info-row"><span class="info-label">Account No.</span><span class="info-val">---</span></div>'
+              + '<div class="info-row"><span class="info-label">PAN</span><span class="info-val">---</span></div>'
+              + '<div class="info-row"><span class="info-label">PF No.</span><span class="info-val">---</span></div>'
+              + '<div class="info-row"><span class="info-label">Pay Mode</span><span class="info-val">Bank Transfer</span></div></div>'
+
+              + '<div class="info-section"><div class="info-head">Leave Details</div>'
+              + '<div class="info-row"><span class="info-label">Total Leaves</span><span class="info-val">24</span></div>'
+              + '<div class="info-row"><span class="info-label">Used</span><span class="info-val">0</span></div>'
+              + '<div class="info-row"><span class="info-label">Balance</span><span class="info-val">24</span></div>'
+              + '<div class="info-row"><span class="info-label">LOP Days</span><span class="info-val">0</span></div>'
+              + '<div class="info-row"><span class="info-label">Status</span><span class="info-val">' + e.status + '</span></div></div></div>'
+
+              + '<div class="earn-ded">'
+              + '<div class="earn-col"><div class="col-head"><span>Earnings</span><span>Amount (Rs.)</span></div>'
+              + '<div class="col-row"><span>Basic Salary</span><span>' + basic.toLocaleString() + '</span></div>'
+              + '<div class="col-row"><span>House Rent Allowance (HRA)</span><span>' + hra.toLocaleString() + '</span></div>'
+              + '<div class="col-row"><span>Conveyance Allowance</span><span>' + convey.toLocaleString() + '</span></div>'
+              + '<div class="col-row"><span>Medical Allowance</span><span>' + medical.toLocaleString() + '</span></div>'
+              + '<div class="col-row"><span>Special Allowance</span><span>' + special.toLocaleString() + '</span></div>'
+              + '<div class="col-row"><span>Leave Travel Allowance (LTA)</span><span>' + lta.toLocaleString() + '</span></div>'
+              + '<div class="col-row" style="color:#aaa"><span>Arrears</span><span>0</span></div>'
+              + '<div class="col-row" style="color:#aaa"><span>Bonus</span><span>0</span></div>'
+              + '<div class="col-row total-row"><span>Gross Earnings</span><span>Rs.' + grossEarn.toLocaleString() + '</span></div></div>'
+
+              + '<div class="ded-col"><div class="col-head"><span>Deductions</span><span>Amount (Rs.)</span></div>'
+              + '<div class="col-row"><span>Provident Fund (PF @ 12%)</span><span>' + pf.toLocaleString() + '</span></div>'
+              + '<div class="col-row"><span>Professional Tax</span><span>' + profTax.toLocaleString() + '</span></div>'
+              + '<div class="col-row"><span>Income Tax (TDS)</span><span>' + incomeTax.toLocaleString() + '</span></div>'
+              + '<div class="col-row" style="color:#aaa"><span>ESI</span><span>0</span></div>'
+              + '<div class="col-row" style="color:#aaa"><span>Loan Recovery</span><span>0</span></div>'
+              + '<div class="col-row" style="color:#aaa"><span>&nbsp;</span><span></span></div>'
+              + '<div class="col-row" style="color:#aaa"><span>&nbsp;</span><span></span></div>'
+              + '<div class="col-row" style="color:#aaa"><span>&nbsp;</span><span></span></div>'
+              + '<div class="col-row total-row"><span>Total Deductions</span><span>Rs.' + totalDed.toLocaleString() + '</span></div></div></div>'
+
+              + '<div class="net-bar">'
+              + '<div><div class="net-label">NET PAY (Take Home)</div>'
+              + '<div style="font-size:10px;opacity:.8">Gross Rs.' + grossEarn.toLocaleString() + ' - Deductions Rs.' + totalDed.toLocaleString() + '</div></div>'
+              + '<div class="net-amt">Rs. ' + netPay.toLocaleString() + '</div></div>'
+
+              + '<div class="net-words"><b>Amount in Words:</b> ' + numberToWords(netPay) + ' Rupees Only</div>'
+
+              + '<div class="footer-grid">'
+              + '<div><div class="sig-line">Employee Signature</div></div>'
+              + '<div><div class="sig-line">HR Manager</div></div>'
+              + '<div><div class="sig-line">Authorised Signatory</div></div></div>'
+              + '<div class="note">* This is a system-generated payslip.</div>'
+              + '<div style="text-align:center;margin-top:18px">'
+              + '<button onclick="window.print()" style="background:#1a6b6b;color:#fff;border:none;padding:10px 28px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:bold">Print / Save as PDF</button>'
+              + '</div></body></html>';
+
+            openDoc(doc, 'Payslip_' + e.name.replace(/ /g, '_') + '.html');
         }
         window.genPayslip = genPayslip;
+        function numberToWords(n) {
+            var ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+            var tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+            n = Math.abs(Math.round(n));
+            if(n===0) return 'Zero';
+            if(n<20) return ones[n];
+            if(n<100) return tens[Math.floor(n/10)]+(n%10?' '+ones[n%10]:'');
+            if(n<1000) return ones[Math.floor(n/100)]+' Hundred'+(n%100?' '+numberToWords(n%100):'');
+            if(n<100000) return numberToWords(Math.floor(n/1000))+' Thousand'+(n%1000?' '+numberToWords(n%1000):'');
+            if(n<10000000) return numberToWords(Math.floor(n/100000))+' Lakh'+(n%100000?' '+numberToWords(n%100000):'');
+            return numberToWords(Math.floor(n/10000000))+' Crore'+(n%10000000?' '+numberToWords(n%10000000):'');
+        }
+        window.numberToWords = numberToWords;
 
         // ── INVOICE ───────────────────────────────────────────────────────
         function renderInvoice() {
@@ -3476,19 +3630,23 @@ to { opacity: 1; transform: translateY(0); }
             <div id="invFormWrap" style="display:none;" class="hrms-card"></div>
             <div class="hrms-table-wrap">
                 <table class="hrms-table">
-                    <thead><tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
-                    <tbody>${HRMS.invoices.map(i=>`
-                    <tr>
-                        <td><b>${escapeHTML(i.id)}</b></td>
-                        <td>${escapeHTML(i.client)}</td>
-                        <td>₹${i.amount.toLocaleString()}</td>
-                        <td>${i.date}</td>
-                        <td><span class="hrms-badge ${i.status==='Paid'?'paid':'pending'}">${i.status}</span></td>
-                        <td>
-                            <button class="hrms-btn-sm" onclick="printInvoice('${i.id}')">🖨️ Print</button>
-                            <button class="hrms-btn-sm" onclick="toggleInvStatus('${i.id}')">${i.status==='Paid'?'Mark Pending':'Mark Paid'}</button>
-                        </td>
-                    </tr>`).join('')}
+                    <thead><tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>GST</th><th>Total</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>${HRMS.invoices.map(i=>{
+                        const gst=Math.round(i.amount*0.18);
+                        const total=i.amount+gst;
+                        return `<tr>
+                            <td><b>${escapeHTML(i.id)}</b></td>
+                            <td>${escapeHTML(i.client)}</td>
+                            <td>₹${i.amount.toLocaleString()}</td>
+                            <td>₹${gst.toLocaleString()}</td>
+                            <td><b>₹${total.toLocaleString()}</b></td>
+                            <td>${i.date}</td>
+                            <td><span class="hrms-badge ${i.status==='Paid'?'paid':'pending'}">${i.status}</span></td>
+                            <td>
+                                <button class="hrms-btn-sm" onclick="printInvoice('${i.id}')">🖨️ Print</button>
+                                <button class="hrms-btn-sm" onclick="toggleInvStatus('${i.id}')">${i.status==='Paid'?'Mark Pending':'Mark Paid'}</button>
+                            </td>
+                        </tr>`}).join('')}
                     </tbody>
                 </table>
             </div>`;
@@ -3498,15 +3656,23 @@ to { opacity: 1; transform: translateY(0); }
             const wrap = document.getElementById('invFormWrap');
             wrap.style.display='block';
             wrap.innerHTML=`
-            <h4>New Invoice</h4>
+            <h4>New Tax Invoice</h4>
             <div class="hrms-form-grid">
-                <div class="hrms-form-field"><label>Client Name</label><input id="if_client" placeholder="Client company name"></div>
+                <div class="hrms-form-field"><label>Client / Company Name</label><input id="if_client" placeholder="Client company name"></div>
+                <div class="hrms-form-field"><label>Client Address</label><input id="if_addr" placeholder="Address"></div>
+                <div class="hrms-form-field"><label>Client GSTIN</label><input id="if_gstin" placeholder="GSTIN (optional)"></div>
                 <div class="hrms-form-field"><label>Invoice Date</label><input id="if_date" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
+                <div class="hrms-form-field"><label>Due Date</label><input id="if_due" type="date"></div>
+                <div class="hrms-form-field"><label>Payment Terms</label><input id="if_terms" placeholder="e.g. Net 30 days" value="Payment within 30 days"></div>
+            </div>
+            <h4 style="margin:1rem 0 0.5rem;color:#4fd1c5;">Line Items</h4>
+            <div style="display:grid;grid-template-columns:3fr 1fr 1fr;gap:0.5rem;margin-bottom:0.4rem;font-size:0.8rem;color:#9aa5b4;padding:0 0.2rem;">
+                <span>Description</span><span>Qty</span><span>Rate (₹)</span>
             </div>
             <div id="invItems">
-                <div class="hrms-inv-row"><input id="if_desc0" placeholder="Item description" style="flex:3"><input id="if_qty0" placeholder="Qty" type="number" style="flex:1"><input id="if_rate0" placeholder="Rate (₹)" type="number" style="flex:1"></div>
+                <div class="hrms-inv-row"><input id="if_desc0" placeholder="Service / item description" style="flex:3"><input id="if_qty0" placeholder="Qty" type="number" value="1" style="flex:1"><input id="if_rate0" placeholder="Rate" type="number" style="flex:1"></div>
             </div>
-            <button class="hrms-btn-secondary" onclick="addInvItem()" style="margin-top:0.5rem;">+ Add Item</button>
+            <button class="hrms-btn-secondary" onclick="addInvItem()" style="margin-top:0.5rem;">+ Add Line Item</button>
             <div style="display:flex;gap:.75rem;margin-top:1rem;">
                 <button class="hrms-btn-primary" onclick="saveInvoice()">💾 Save Invoice</button>
                 <button class="hrms-btn-secondary" onclick="document.getElementById('invFormWrap').style.display='none'">Cancel</button>
@@ -3518,47 +3684,159 @@ to { opacity: 1; transform: translateY(0); }
             const c = invItemCount++;
             const div = document.createElement('div');
             div.className = 'hrms-inv-row';
-            div.innerHTML = `<input id="if_desc${c}" placeholder="Item description" style="flex:3"><input id="if_qty${c}" placeholder="Qty" type="number" style="flex:1"><input id="if_rate${c}" placeholder="Rate (₹)" type="number" style="flex:1">`;
+            div.innerHTML = `<input id="if_desc${c}" placeholder="Service / item description" style="flex:3"><input id="if_qty${c}" placeholder="Qty" type="number" value="1" style="flex:1"><input id="if_rate${c}" placeholder="Rate" type="number" style="flex:1">`;
             document.getElementById('invItems').appendChild(div);
         }
 
         function saveInvoice() {
             const client = document.getElementById('if_client')?.value.trim();
-            const date = document.getElementById('if_date')?.value;
+            const date   = document.getElementById('if_date')?.value;
+            const addr   = document.getElementById('if_addr')?.value.trim()||'';
+            const gstin  = document.getElementById('if_gstin')?.value.trim()||'';
+            const due    = document.getElementById('if_due')?.value||'';
+            const terms  = document.getElementById('if_terms')?.value.trim()||'Net 30 days';
             if (!client) { alert('Client name is required'); return; }
             const items = [];
-            let total = 0;
-            for (let i=0; i<10; i++) {
+            let subtotal = 0;
+            for (let i=0; i<20; i++) {
                 const d = document.getElementById('if_desc'+i);
                 if (!d) break;
                 const q = parseFloat(document.getElementById('if_qty'+i)?.value)||0;
                 const r = parseFloat(document.getElementById('if_rate'+i)?.value)||0;
-                if (d.value.trim()) { items.push({desc:d.value,qty:q,rate:r}); total+=q*r; }
+                if (d.value.trim()) { items.push({desc:d.value,qty:q,rate:r}); subtotal+=q*r; }
             }
             const newId = 'INV' + String(HRMS.invoices.length+1).padStart(3,'0');
-            const invList = HRMS.invoices; invList.unshift({ id:newId, client, amount:total, date, status:'Pending', items }); HRMS.invoices = invList;
+            const invList = HRMS.invoices;
+            invList.unshift({ id:newId, client, addr, gstin, amount:subtotal, date, due, terms, status:'Pending', items });
+            HRMS.invoices = invList;
             saveHRMS();
             invItemCount = 1;
             hrmsRenderModule('invoice');
         }
 
         function toggleInvStatus(id) {
-            const inv = HRMS.invoices.find(i=>i.id===id);
-            const invArr = HRMS.invoices; const inv2 = invArr.find(i=>i.id===id); inv2.status = inv2.status==='Paid'?'Pending':'Paid'; HRMS.invoices = invArr; saveHRMS();
+            const invArr = HRMS.invoices;
+            const inv2 = invArr.find(i=>i.id===id);
+            inv2.status = inv2.status==='Paid'?'Pending':'Paid';
+            HRMS.invoices = invArr;
+            saveHRMS();
             hrmsRenderModule('invoice');
         }
 
         function printInvoice(id) {
-            const inv = HRMS.invoices.find(i=>i.id===id);
-            const rows = inv.items.map(item=>`<tr><td>${item.desc}</td><td>${item.qty}</td><td>₹${item.rate}</td><td>₹${(item.qty*item.rate).toLocaleString()}</td></tr>`).join('');
-            const w = window.open('','_blank');
-            w.document.write(`<html><head><title>Invoice ${inv.id}</title><style>body{font-family:Arial;padding:30px;max-width:700px;margin:auto}h2{color:#38b2ac}.header{display:flex;justify-content:space-between;margin-bottom:20px}table{width:100%;border-collapse:collapse}th{background:#f0fafa;text-align:left;padding:10px}td{padding:10px;border-bottom:1px solid #eee}.total{text-align:right;font-size:1.3em;font-weight:bold;margin-top:15px;color:#2d3748}.badge{padding:4px 12px;border-radius:99px;font-size:0.85em;background:${inv.status==='Paid'?'#c6f6d5':'#feebc8'};color:${inv.status==='Paid'?'#276749':'#7b341e'}}button{background:#38b2ac;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;margin-top:20px}</style></head><body>
-            <div class="header"><div><h2>LeoMox IT Solutions</h2><p>info@leomox.in | +91 9491401514<br>Kolanukonda, Mangalagiri, Guntur, AP</p></div>
-            <div style="text-align:right"><h3>INVOICE</h3><p><b>${inv.id}</b><br>Date: ${inv.date}<br><span class="badge">${inv.status}</span></p></div></div>
-            <p><b>Bill To:</b> ${inv.client}</p>
-            <table><thead><tr><th>Description</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead><tbody>${rows}</tbody></table>
-            <div class="total">Total: ₹${inv.amount.toLocaleString()}</div>
-            <button onclick="window.print()">🖨️ Print / Save PDF</button></body></html>`);
+            var inv = HRMS.invoices.find(function(i){return i.id===id;});
+            var subtotal = inv.items.reduce(function(s,it){return s+(it.qty*it.rate);},0);
+            var cgst  = Math.round(subtotal*0.09);
+            var sgst  = Math.round(subtotal*0.09);
+            var total = subtotal + cgst + sgst;
+            var rows  = inv.items.map(function(it,idx){
+                return '<tr>'
+                  + '<td style="text-align:center">' + (idx+1) + '</td>'
+                  + '<td>' + it.desc + '</td>'
+                  + '<td style="text-align:center">' + it.qty + '</td>'
+                  + '<td style="text-align:right">Rs.' + parseFloat(it.rate).toLocaleString() + '</td>'
+                  + '<td style="text-align:right">Rs.' + (it.qty*it.rate).toLocaleString() + '</td>'
+                  + '</tr>';
+            }).join('');
+
+            var statusBg = inv.status==='Paid' ? '#c6f6d5' : '#feebc8';
+            var statusCol= inv.status==='Paid' ? '#276749' : '#7b341e';
+
+            var doc = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Tax Invoice ' + inv.id + '</title>'
+              + '<style>'
+              + '*{box-sizing:border-box;margin:0;padding:0}'
+              + 'body{font-family:Arial,sans-serif;font-size:11px;color:#1a1a1a;background:#fff;padding:28px;max-width:800px;margin:auto}'
+              + '.page-border{border:2px solid #1a6b6b;padding:18px;position:relative;}'
+              + '.hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid #1a6b6b}'
+              + '.company h1{font-size:20px;color:#1a6b6b;font-weight:900;letter-spacing:1px}'
+              + '.company p{color:#555;font-size:10px;margin-top:3px;line-height:1.6}'
+              + '.inv-title{font-size:20px;font-weight:900;color:#1a6b6b;letter-spacing:3px;border:3px solid #1a6b6b;padding:5px 16px;display:inline-block;margin-bottom:8px}'
+              + '.inv-meta{font-size:10px;color:#333;line-height:1.9}'
+              + '.stamp{border:1px solid #1a6b6b;color:#1a6b6b;padding:2px 8px;font-size:9px;font-weight:bold;margin-right:4px}'
+              + '.bill-row{display:grid;grid-template-columns:1fr 1fr;border:1px solid #bbb;margin-bottom:12px}'
+              + '.bill-box{padding:10px 12px}'
+              + '.bill-box:first-child{border-right:1px solid #bbb}'
+              + '.bill-head{font-weight:bold;color:#fff;background:#1a6b6b;padding:4px 12px;margin:-10px -12px 8px;font-size:10px;letter-spacing:1px}'
+              + '.bill-line{font-size:10px;line-height:1.9;color:#333}'
+              + 'table{width:100%;border-collapse:collapse;margin-bottom:0}'
+              + 'thead tr{background:#1a6b6b;color:#fff}'
+              + 'th{padding:7px 8px;font-size:10px;text-align:left}'
+              + 'tbody tr:nth-child(even){background:#f5fafa}'
+              + 'td{padding:7px 8px;font-size:10px;border-bottom:1px solid #ddd}'
+              + '.totals-box{width:300px;border:1px solid #bbb;margin-left:auto}'
+              + '.tot-row{display:flex;justify-content:space-between;padding:5px 10px;border-bottom:1px solid #eee;font-size:10px}'
+              + '.tot-row.grand{background:#1a6b6b;color:#fff;font-weight:bold;font-size:12px;padding:8px 10px}'
+              + '.words-box{background:#f0fafa;border:1px solid #bbb;padding:7px 12px;font-size:10px;margin:10px 0}'
+              + '.terms-box{border:1px solid #bbb;padding:8px 12px;margin-top:10px;font-size:9.5px;color:#555;line-height:1.7}'
+              + '.sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:18px;padding-top:12px;border-top:2px solid #1a6b6b}'
+              + '.sig-line{border-top:1px solid #555;margin-top:36px;padding-top:5px;font-size:9.5px;color:#555;text-align:center}'
+              + '.footer-note{font-size:9px;color:#888;text-align:center;margin-top:10px;font-style:italic}'
+              + '@media print{body{padding:0} button{display:none!important}}'
+              + '</style></head><body>'
+              + '<div class="page-border">'
+
+              + '<div class="hdr">'
+              + '<div class="company"><h1>LeoMox IT Solutions</h1>'
+              + '<p>Kolanukonda, Mangalagiri, Guntur, Andhra Pradesh - 522503<br>'
+              + 'info@leomox.in | +91 9491401514</p></div>'
+              + '<div style="text-align:right">'
+              + '<div class="inv-title">TAX INVOICE</div><br>'
+              + '<div class="inv-meta"><b>Invoice No.:</b> ' + inv.id + '<br>'
+              + '<b>Date:</b> ' + inv.date + '<br>'
+              + (inv.due ? '<b>Due Date:</b> ' + inv.due + '<br>' : '')
+              + '<b>Status:</b> <span style="background:' + statusBg + ';color:' + statusCol + ';padding:2px 8px;border-radius:3px;font-weight:bold;font-size:10px">' + inv.status + '</span></div>'
+              + '<div style="margin-top:8px"><span class="stamp">ORIGINAL</span><span class="stamp">DUPLICATE</span></div>'
+              + '</div></div>'
+
+              + '<div class="bill-row">'
+              + '<div class="bill-box"><div class="bill-head">BILL TO</div>'
+              + '<div class="bill-line"><b>' + (inv.client||'---') + '</b></div>'
+              + (inv.addr ? '<div class="bill-line">' + inv.addr + '</div>' : '')
+              + (inv.gstin ? '<div class="bill-line"><b>GSTIN:</b> ' + inv.gstin + '</div>' : '')
+              + '</div>'
+              + '<div class="bill-box"><div class="bill-head">PAYMENT DETAILS</div>'
+              + '<div class="bill-line"><b>Terms:</b> ' + (inv.terms||'Net 30 days') + '</div>'
+              + '<div class="bill-line"><b>Bank:</b> ---</div>'
+              + '<div class="bill-line"><b>Account No.:</b> ---</div>'
+              + '<div class="bill-line"><b>IFSC:</b> ---</div>'
+              + '</div></div>'
+
+              + '<table><thead><tr>'
+              + '<th style="width:5%;text-align:center">Sr.</th>'
+              + '<th style="width:50%">Description</th>'
+              + '<th style="width:8%;text-align:center">Qty</th>'
+              + '<th style="width:15%;text-align:right">Unit Rate (Rs.)</th>'
+              + '<th style="width:18%;text-align:right">Amount (Rs.)</th>'
+              + '</tr></thead><tbody>' + rows + '</tbody></table>'
+
+              + '<div class="totals-box" style="margin-top:0">'
+              + '<div class="tot-row"><span>Sub Total</span><span>Rs.' + subtotal.toLocaleString() + '</span></div>'
+              + '<div class="tot-row"><span>CGST @ 9%</span><span>Rs.' + cgst.toLocaleString() + '</span></div>'
+              + '<div class="tot-row"><span>SGST @ 9%</span><span>Rs.' + sgst.toLocaleString() + '</span></div>'
+              + '<div class="tot-row"><span>Discount</span><span>Rs.0</span></div>'
+              + '<div class="tot-row grand"><span>Net Amount Payable</span><span>Rs.' + total.toLocaleString() + '</span></div>'
+              + '</div>'
+
+              + '<div class="words-box"><b>Amount in Words:</b> ' + numberToWords(total) + ' Rupees Only</div>'
+
+              + '<div class="terms-box"><b>Terms and Conditions:</b>'
+              + '1. Payment to be made within ' + (inv.terms||'30 days') + '.<br>'
+              + '2. Cheques/DD to be drawn in favour of "LeoMox IT Solutions".<br>'
+              + '3. Interest @ 24% p.a. will be charged on delayed payments.<br>'
+              + '4. Disputes subject to Guntur jurisdiction only.<br>'
+              + '5. This is a computer-generated invoice.</div>'
+
+              + '<div class="sig-grid">'
+              + '<div><div class="sig-line">Customer Signature and Stamp</div></div>'
+              + '<div><div style="font-size:10px;color:#555;margin-bottom:6px;text-align:center">For LeoMox IT Solutions</div>'
+              + '<div class="sig-line">Authorised Signatory</div></div></div>'
+
+              + '<div class="footer-note">LeoMox IT Solutions - Empowering businesses with smart digital communication solutions.</div>'
+              + '<div style="text-align:center;margin-top:14px">'
+              + '<button onclick="window.print()" style="background:#1a6b6b;color:#fff;border:none;padding:10px 28px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:bold">Print / Save as PDF</button>'
+              + '</div></div></body></html>';
+
+            openDoc(doc, 'Invoice_' + inv.id + '.html');
         }
         window.showAddInvoice=showAddInvoice; window.addInvItem=addInvItem; window.saveInvoice=saveInvoice; window.toggleInvStatus=toggleInvStatus; window.printInvoice=printInvoice;
 
